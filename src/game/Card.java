@@ -35,4 +35,8 @@ public class Card {
     public void reveal(){
         this.visible = true;
     }
+
+    public String toString(){
+        return "Card " + this.name + " value of : " + value + ",visible : " + this.isVisible();
+    }
 }
