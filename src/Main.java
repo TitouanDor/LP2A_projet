@@ -6,8 +6,10 @@ public class Main{
         Card card = new Card();
         System.out.println("Hello world !!" + card.getName());
         Library lib = new Library();
-        lib.showAllCard();
-        lib.draw(0);
-        lib.showAllCard();
+        System.out.println(lib.getCardNumber());
+        card = lib.draw(0, false);
+        System.out.println(card.toString());
+        lib.drawSetUp(7);
+        System.out.println(lib.getCardNumber());
     }
 }

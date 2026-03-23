@@ -44,17 +44,31 @@ public class Library {
         }
     }
 
-    public Card drawRandomCard(){
+    public Card drawRandomCard(boolean isReveled){
         Random rdm = new Random();
         int index = rdm.nextInt(this.getCardNumber());
         Card card = this.list.get(index);
-        card.reveal();
+        this.list.remove(index);
+        if (isReveled){
+            card.reveal();
+        }
         return card;
     }
 
-    public Card draw(int i){
+    public Card draw(int i, boolean isReveled){
         Card card = this.list.get(i);
-        card.reveal();
+        this.list.remove(i);
+        if (isReveled){
+            card.reveal();
+        }
         return card;
+    }
+
+    public ArrayList<Card> drawSetUp(int cardNumber){
+        ArrayList<Card> list = new ArrayList<Card>(cardNumber);
+        for (int i = 0;i<cardNumber;i++){
+            list.add(this.drawRandomCard(false));
+        }
+        return list;
     }
 }
