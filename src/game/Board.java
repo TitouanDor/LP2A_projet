@@ -1,15 +1,12 @@
-package game.gamerule;
+package game;
 
 import java.util.ArrayList;
 
-import game.Card;
-import game.Library;
-
 public class Board {
-    private Library lib;
-    private ArrayList<Card> player1;
-    private ArrayList<Card> player2;
-    private ArrayList<Card> graveward; //Magic the GATHERING
+    protected Library lib;
+    protected ArrayList<Card> player1;
+    protected ArrayList<Card> player2;
+    protected ArrayList<Card> graveward; //Magic the GATHERING
     private int column;
     private int line;
 
@@ -25,10 +22,20 @@ public class Board {
     public Board(int line, int column){
         this.column = column;
         this.line = line;
-        this.player1 = new ArrayList<Card>(this.column*this.line);
-        this.player2 = new ArrayList<Card>(this.column*this.line);
         this.graveward = new ArrayList<Card>();
         this.lib = new Library();
+        this.player1 = new ArrayList<Card>(this.column*this.line);
+        this.player2 = new ArrayList<Card>(this.column*this.line);
+    }
+
+    public void revelCard(boolean isMainUser, int line, int column){
+        Card card;
+        if(isMainUser){
+            card = this.player1.get(line*this.column + column);
+        } else {
+            card = this.player2.get(line*this.column + column);
+        }
+        card.reveal();
     }
 
     public Card getCardBoard(boolean isMainUser, int line, int column){
@@ -40,9 +47,16 @@ public class Board {
 
     public void setCardBoard(boolean isMainUser, int line, int column, Card card){
         if(isMainUser){
-
             this.player1.set(line*this.column + column, card);
         } 
         this.player2.set(line*this.column + column, card);
+    }
+
+    public int getLine(){
+        return this.line;
+    }
+
+    public int getColumn(){
+        return this.column;
     }
 }

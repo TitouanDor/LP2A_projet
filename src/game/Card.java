@@ -39,4 +39,8 @@ public class Card {
     public String toString(){
         return "Card " + this.name + " value of : " + value + ",visible : " + this.isVisible();
     }
+
+    public int getValue(){
+        return this.value;
+    }
 }
