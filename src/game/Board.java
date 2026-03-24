@@ -12,7 +12,7 @@ public class Board {
         this.numberOfPlayer = 2;
         this.playerList = new ArrayList<Player>(this.numberOfPlayer);
         for(int i = 0;i<this.numberOfPlayer;i++){
-            this.playerList.add(new Player(true, 3, 4));
+            this.playerList.add(new Player(false, 3, 4));
         }
         this.graveward = new ArrayList<Card>();
         this.lib = new Library();
@@ -26,5 +26,9 @@ public class Board {
         }
         this.graveward = new ArrayList<Card>();
         this.lib = new Library();
+    }
+
+    public int getNumberOfPlayer(){
+        return this.numberOfPlayer;
     }
 }

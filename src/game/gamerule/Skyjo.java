@@ -1,5 +1,4 @@
 package game.gamerule;
-import java.util.ArrayList;
 import java.util.Random;
 
 import game.Board;
@@ -22,11 +21,55 @@ public class Skyjo extends Board{
         this.isUiActive = false;
     }
 
-    public void game(){
+    private void setUpGame(){
+        int nbCard = 0;
+        for (Player player : this.playerList) {
+            nbCard = player.getColumn()*player.getLine();
+            player.setHand(lib.drawSetUp(nbCard));
+            if (player.isHumain()){
+                //ASK SOMETHING TO REVEAL 2 CARD
+            } else {
+                //DO SOMETHING TO REVEAL 2 CARD
+            }
+        }
+    }
 
+    private boolean isFinish(){
+        for (Player p : this.playerList) {
+            if (p.isHandRevealed()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void game(){
+        this.setUpGame();
+        Player playingPlayer;
+        int i = 0;
+        while (!this.isFinish()){
+            playingPlayer = this.playerList.get(i);
+            this.playerTurn(playingPlayer);
+            if (i>=this.getNumberOfPlayer()){
+                i = 0;
+            }
+        }
     }
 
     private void playerTurn(Player p){
-
+        int line = 0;
+        int column = 0;
+        Card card;
+        if (p.isHumain()){
+            //DO HUMAIN TURN
+        } else {
+            do{
+                line = rdm.nextInt(p.getLine());
+                column = rdm.nextInt(p.getColumn());
+                System.out.println("Coo : " + line + ";" + column);
+                card = p.getCard(line, column);
+            }while(card == null || card.isVisible());
+            card.reveal();
+        }
     }
 }

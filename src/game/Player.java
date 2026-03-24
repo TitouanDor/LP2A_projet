@@ -35,6 +35,14 @@ public class Player {
         card.reveal();
     }
 
+    public Card getCard(int line, int column){
+        if (line < this.getLine() && column<this.getColumn()){
+            return this.hand.get(line*this.getColumn()+column);
+        } else {
+            return null;
+        }
+    }
+
     public Card exchangeCard(Card new_card, int line, int column){
         int index = line*this.getColumn()+column;
         Card card = this.hand.get(index);
@@ -45,5 +53,18 @@ public class Player {
 
     public boolean isHumain(){
         return this.human;
+    }
+
+    public void setHand(ArrayList<Card> new_hand){
+        this.hand = new_hand;
+    }
+
+    public boolean isHandRevealed(){
+        for (Card card : hand) {
+            if (!card.isVisible()){
+                return false;
+            }
+        }
+        return true;
     }
 }
