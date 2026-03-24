@@ -48,11 +48,18 @@ public class Skyjo extends Board{
         Player playingPlayer;
         int i = 0;
         while (!this.isFinish()){
-            playingPlayer = this.playerList.get(i);
-            this.playerTurn(playingPlayer);
             if (i>=this.getNumberOfPlayer()){
                 i = 0;
+            } 
+            playingPlayer = this.playerList.get(i);
+            if(this.isUiActive){
+
+            } else {
+                this.drawWithoutUI(playingPlayer);
             }
+            
+            this.playerTurn(playingPlayer);
+            i++;
         }
     }
 
@@ -70,6 +77,21 @@ public class Skyjo extends Board{
                 card = p.getCard(line, column);
             }while(card == null || card.isVisible());
             card.reveal();
+        }
+    }
+
+    private void drawWithoutUI(Player p){
+        Card card;
+        for(int i = 0;i<p.getLine();i++){
+            for(int j=0;j<p.getColumn();j++){
+                card = p.getCard(i, j);
+                if (card.isVisible()){
+                    System.out.print(card.getValue() + ";");
+                } else {
+                    System.out.print("#;");
+                }
+            }
+            System.out.println();
         }
     }
 }
