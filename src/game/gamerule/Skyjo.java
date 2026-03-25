@@ -72,8 +72,6 @@ public class Skyjo extends Board{
             this.playerTrun(playingPlayer);
             i++;
         }
-
-        this.endGame();
     }
 
     public void game(){
