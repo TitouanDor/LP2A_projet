@@ -39,7 +39,16 @@ public class Board {
         //PUT HOW TO DRAW THE UI HERE
     }
 
+    protected void printGraveward(){
+        for (Card card : this.graveward) {
+            System.out.print(card.getValue() + ";");
+        }
+        System.out.println();
+    }
+
     protected void drawBoardWithoutUi(){
+        System.out.print("\033[H\033[2J"); //TO CLEAR THE CONSOLE
+        System.out.println();
         System.out.print("Lib : #\t Grave : ");
         int gravewardSize = this.graveward.size();
         if( gravewardSize != 0){

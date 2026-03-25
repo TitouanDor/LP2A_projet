@@ -17,7 +17,7 @@ public class Skyjo extends Board{
         this.scoreList = new int[this.getNumberOfPlayer()];
     }
 
-    private void setUpGame(){
+    private void setUpRound(){
         int nbCard = 0;
         for (Player player : this.playerList) {
             nbCard = player.getColumn()*player.getLine();
@@ -31,7 +31,7 @@ public class Skyjo extends Board{
         this.graveward.add(this.lib.drawRandomCard(true));
     }
 
-    private boolean isFinish(){
+    private boolean isRoundFinish(){
         for (Player p : this.playerList) {
             if (p.isHandRevealed()){
                 return true;
@@ -40,14 +40,23 @@ public class Skyjo extends Board{
         return false;
     }
 
-    public void game(){
-        this.setUpGame();
+    private boolean isGameFinish(){
+        for (int score : this.scoreList) {
+            if(score>=100){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void round(){
+        this.setUpRound();
         Player playingPlayer;
         int i = 0;
         if(!this.isUiActive){
             System.out.println("Start the game");
         }
-        while (!this.isFinish()){
+        while (!this.isRoundFinish()){
             if (i>=this.getNumberOfPlayer()){
                 i = 0;
             } 
@@ -65,6 +74,29 @@ public class Skyjo extends Board{
         }
 
         this.endGame();
+    }
+
+    public void game(){
+        for (int score : this.scoreList) {
+            score = 0;
+        }
+
+        while(isGameFinish()){
+            this.round();
+            this.updateScore();
+        }
+
+    }
+
+    private void updateScore(){
+        int score;
+        Player p;
+        for(int i = 0;i<this.getNumberOfPlayer();i++){
+            score = this.scoreList[i];
+            p = this.playerList.get(i);
+            p.revealHand();
+            score += p.getHandValue();
+        }
     }
 
     private void endGame(){
@@ -88,11 +120,8 @@ public class Skyjo extends Board{
             System.out.println(cardInPlay.getValue());
         } else if (placeToDraw == 1){
             int index = this.graveward.size()-1;
-            System.out.println("size : " + index);
             cardInPlay = this.graveward.get(index);
-            System.out.println("Get");
             this.graveward.remove(index);
-            System.out.println("remove");
             cardInPlay.reveal();
         } else {
             cardInPlay = null;
