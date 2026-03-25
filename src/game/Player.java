@@ -137,12 +137,12 @@ public class Player {
         return coo;
     }
 
-    public int chooseLibOrGrave(){
+    public int chooseBetweenTwo(String text){
         int c = -1;
         int numberOfChoice = 2;
         if(this.isHumain()){
             do{
-                System.out.println("Do you want to draw the top Card of : \n(0) : the library\n(1) : the graveward");
+                System.out.println(text);
                 c = this.scanner.nextInt();
             }while (c<=0 && c>numberOfChoice);
         } else {

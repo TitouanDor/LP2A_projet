@@ -106,14 +106,16 @@ public class Skyjo extends Board{
     }
 
     private void playerTrun(Player p){
-        int placeToDraw = p.chooseLibOrGrave();
+        int choice;
         Card cardInPlay;
         int [] coo;
         Card cardToReplace;
-        if (placeToDraw == 0){
+
+        choice = p.chooseBetweenTwo("Do you want to draw the top Card of : \n\t(0) : the library\n\t(1) : the graveward");
+        if (choice == 0){
             cardInPlay = this.lib.drawRandomCard(true);
             System.out.println(cardInPlay.getValue());
-        } else if (placeToDraw == 1){
+        } else if (choice == 1){
             int index = this.graveward.size()-1;
             cardInPlay = this.graveward.get(index);
             this.graveward.remove(index);
@@ -121,10 +123,16 @@ public class Skyjo extends Board{
         } else {
             cardInPlay = null;
         }
-
+        choice = p.chooseBetweenTwo("Do you want to : \n\t(0) : exchange the card\n\t(1) : reveal one of your hand/board");
         coo = p.chooseXY();
-        cardToReplace = p.exchangeCard(cardInPlay, coo[0], coo[1]);
-        this.graveward.add(cardToReplace);
+        if (choice == 0){
+            cardToReplace = p.exchangeCard(cardInPlay, coo[0], coo[1]);
+            this.graveward.add(cardToReplace);
+        } else if(choice == 1){
+            p.revealCard(coo[0], coo[1]);
+            this.graveward.add(cardInPlay);
+        }
+        
         this.updatePlayerHand(p);
     }
 
@@ -148,5 +156,4 @@ public class Skyjo extends Board{
             }
         }
     }
-
 }
