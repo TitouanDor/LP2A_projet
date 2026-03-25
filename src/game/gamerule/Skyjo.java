@@ -24,7 +24,9 @@ public class Skyjo extends Board{
             player.setHand(lib.drawSetUp(nbCard));
             Card card;
             for(int i = 0;i<2;i++){
-                card = player.chooseCardFromHand(true);
+                do {
+                    card = player.chooseCardFromHand(true);
+                }while(card.isVisible());
                 card.reveal();
             }
         }
@@ -53,9 +55,6 @@ public class Skyjo extends Board{
         this.setUpRound();
         Player playingPlayer;
         int i = 0;
-        if(!this.isUiActive){
-            System.out.println("Start the game");
-        }
         while (!this.isRoundFinish()){
             if (i>=this.getNumberOfPlayer()){
                 i = 0;
@@ -65,6 +64,7 @@ public class Skyjo extends Board{
                 this.drawBoardUi();
 
             } else if (playingPlayer.isHumain()){
+                System.out.println("Player : " + i + " your turn !!");
                 this.drawBoardWithoutUi();
                 playingPlayer.drawConsolHand();
             }
