@@ -20,10 +20,10 @@ import game.Player;
 public class Skyjo extends Board {
 
     /** Score list indexed by player ID; scores accumulate over rounds. */
-    private int[] scoreList;
+    protected int[] scoreList;
 
     /** ID of the player who first reveals all cards in the current round. */
-    private int id_finisher;
+    protected int id_finisher;
 
     /**
      * Default constructor for a Skyjo game.
@@ -55,7 +55,7 @@ public class Skyjo extends Board {
      * 
      * @return no return value
      */
-    private void setUpRound() {
+    protected void setUpRound() {
         int nbCard = 0;
         for (Player player : this.playerList) {
             nbCard = player.getColumns() * player.getRaws();
@@ -77,7 +77,7 @@ public class Skyjo extends Board {
      *
      * @return true if the round has ended; in that case, {@link #id_finisher} is set to that player’s ID
      */
-    private boolean isRoundFinish() {
+    protected boolean isRoundFinish() {
         Player p;
         for (int i = 0; i < this.getNumberOfPlayer(); i++) {
             p = this.playerList.get(i);
@@ -95,7 +95,7 @@ public class Skyjo extends Board {
      *
      * @return true if the game has ended
      */
-    private boolean isGameFinish() {
+    protected boolean isGameFinish() {
         for (int score : this.scoreList) {
             if (score >= 100) {
                 return true;
@@ -111,7 +111,7 @@ public class Skyjo extends Board {
      * 
      * @return no return value
      */
-    private void round() {
+    protected void round() {
         this.setUpRound();
         Player playingPlayer;
         int i = 0;
@@ -161,7 +161,7 @@ public class Skyjo extends Board {
      * 
      * @return no return value
      */
-    private void updateScore() {
+    protected void updateScore() {
         Player p;
         int[] tempScore = new int[this.getNumberOfPlayer()];
         int scoreMinWithoutWinner;
@@ -197,7 +197,7 @@ public class Skyjo extends Board {
      * 
      * @return no return value
      */
-    private void endGame() {
+    protected void endGame() {
         int id_winner = 0;
         for (int i = 0; i < this.getNumberOfPlayer(); i++) {
             if (this.scoreList[id_winner] > this.scoreList[i]) {
@@ -221,7 +221,7 @@ public class Skyjo extends Board {
      * 
      * @return no return value
      */
-    private void playerTrun(Player p) {
+    protected void playerTrun(Player p) {
         int choice;
         Card cardInPlay;
         int[] coo;
@@ -262,7 +262,7 @@ public class Skyjo extends Board {
      *
      * @param p the player whose hand is being updated
      */
-    private void updatePlayerHand(Player p) {
+    protected void updatePlayerHand(Player p) {
         boolean hasColumn;
         Card ref;
         Card card;
@@ -288,7 +288,7 @@ public class Skyjo extends Board {
      * 
      * @return no return value
      */
-    private void printScore() {
+    protected void printScore() {
         Player p;
         int score;
         System.out.println("Score : ");
