@@ -31,8 +31,8 @@ public class Board {
      */
     public Board() {
         this.numberOfPlayer = 2;
-        this.playerList = new ArrayList<Player>(this.numberOfPlayer);
-        for (int i = 0; i < this.numberOfPlayer; i++) {
+        this.playerList = new ArrayList<Player>(this.getNumberOfPlayer());
+        for (int i = 0; i < this.getNumberOfPlayer(); i++) {
             this.playerList.add(new Player(false, 3, 4));
         }
         this.graveward = new ArrayList<Card>();

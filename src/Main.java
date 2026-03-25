@@ -1,10 +1,10 @@
-import game.gamerule.InvertShortSkyjo;
+import game.gamerule.InvertSkyjo;
 
 public class Main{
     public static void main(String[] args) {
         //DRAW SETUP MENU HERE
-        boolean [] list = {false,false};
-        InvertShortSkyjo game = new InvertShortSkyjo(2,3,4,list);
+        boolean [] listOfPlayer = {false,false,false};
+        InvertSkyjo game = new InvertSkyjo(3,4,listOfPlayer);
         game.game();
         
     }

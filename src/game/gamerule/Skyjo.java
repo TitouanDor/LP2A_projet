@@ -42,8 +42,8 @@ public class Skyjo extends Board {
      * @param column        number of columns in each player's hand grid
      * @param listOfHuman   boolean array indicating which players are human (true = human, false = AI)
      */
-    public Skyjo(int NbPlayer, int line, int column, boolean[] listOfHuman) {
-        super(NbPlayer, line, column, listOfHuman);
+    public Skyjo(int line, int column, boolean[] listOfHuman) {
+        super(listOfHuman.length, line, column, listOfHuman);
         this.scoreList = new int[this.getNumberOfPlayer()];
     }
 

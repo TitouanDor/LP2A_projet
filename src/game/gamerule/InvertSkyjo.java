@@ -27,8 +27,8 @@ public class InvertSkyjo extends Skyjo {
      * @param column        number of columns in each player's hand grid
      * @param listOfHuman   boolean array indicating which players are human (true = human, false = AI)
      */
-    public InvertSkyjo(int NbPlayer, int line, int column, boolean[] listOfHuman) {
-        super(NbPlayer, line, column, listOfHuman);
+    public InvertSkyjo(int line, int column, boolean[] listOfHuman) {
+        super(line, column, listOfHuman);
     }
 
     /**
