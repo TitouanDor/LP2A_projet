@@ -6,6 +6,7 @@ import game.Player;
 
 public class Skyjo extends Board{
     private int [] scoreList;
+    private int id_finisher;
 
     public Skyjo(){
         super();
@@ -34,8 +35,11 @@ public class Skyjo extends Board{
     }
 
     private boolean isRoundFinish(){
-        for (Player p : this.playerList) {
-            if (p.isHandRevealed()){
+        Player p;
+        for(int i = 0;i<this.getNumberOfPlayer();i++){
+            p = this.playerList.get(i);
+            if(p.isHandRevealed()){
+                this.id_finisher = i;
                 return true;
             }
         }
@@ -89,10 +93,30 @@ public class Skyjo extends Board{
 
     private void updateScore(){
         Player p;
+        int [] tempScore = new int[this.getNumberOfPlayer()];
+        int scoreMinWithoutWinner;
+        if(id_finisher == 0){
+            scoreMinWithoutWinner = this.playerList.get(1).getHandValue();
+        } else {
+            scoreMinWithoutWinner = this.playerList.get(0).getHandValue();
+        }
+
         for(int i = 0;i<this.getNumberOfPlayer();i++){
             p = this.playerList.get(i);
             p.revealHand();
-            this.scoreList[i] += p.getHandValue();
+            tempScore[i] = p.getHandValue();
+            if(i != id_finisher && tempScore[i]<scoreMinWithoutWinner){
+                scoreMinWithoutWinner = tempScore[i];
+            }
+        }
+
+        if(scoreMinWithoutWinner<=tempScore[id_finisher]){
+            System.out.println("Play better youre score is multiply per 2");
+            tempScore[id_finisher] *= 2;
+        }
+
+        for(int i = 0;i<this.getNumberOfPlayer();i++){
+            this.scoreList[i] += tempScore[i];
         }
     }
 
@@ -117,7 +141,9 @@ public class Skyjo extends Board{
         choice = p.chooseBetweenTwo("Do you want to draw the top Card of : \n\t(0) : the library\n\t(1) : the graveward");
         if (choice == 0){
             cardInPlay = this.lib.drawRandomCard(true);
-            System.out.println(cardInPlay.getValue());
+            if(p.isHumain()){
+                System.out.println(cardInPlay.getValue());
+            }
         } else if (choice == 1){
             int index = this.graveward.size()-1;
             cardInPlay = this.graveward.get(index);
