@@ -4,72 +4,153 @@ import java.util.Random;
 import java.util.Scanner;
 
 
+/**
+ * Represents a player in the game, which can be either human or AI-controlled.
+ * Each player has a hand of cards arranged in a grid (raw × column),
+ * and can interact with the game via input or random decision-making.
+ */
 public class Player {
+
+    /** True if the player is human, false if AI-controlled. */
     private boolean human;
+
+    /** List of cards currently in the player's hand. */
     private ArrayList<Card> hand;
-    private int line;
+
+    /** Number of rows in the player's hand grid. */
+    private int raw;
+
+    /** Number of columns in the player's hand grid. */
     private int column;
+
+    /** Random generator used for AI actions. */
     private Random rdm;
+
+    /** Scanner used to read human player input. */
     private Scanner scanner;
+
+    /** Name of the player. Defaults to "Default_name". */
     private String name;
 
-    public Player(){
+    /**
+     * Default constructor.
+     * Initializes a non-human player with a 4×3 hand grid and a default name.
+     */
+    public Player() {
         this.human = false;
-        this.line = 4;
+        this.raw = 4;
         this.column = 3;
-        this.hand = new ArrayList<Card>(this.line*this.column);
+        this.hand = new ArrayList<Card>(this.raw * this.column);
         this.rdm = new Random();
         this.scanner = new Scanner(System.in);
         this.name = "Default_name";
     }
 
-    public Player(boolean human, int line, int column){
+    /**
+     * Constructs a player with specified type and hand dimensions.
+     *
+     * @param human  true if the player is human, false if AI-controlled
+     * @param raw   number of rows in the player's hand grid
+     * @param column number of columns in the player's hand grid
+     */
+    public Player(boolean human, int raw, int column) {
         this.human = human;
-        this.line = line;
+        this.raw = raw;
         this.column = column;
-        this.hand = new ArrayList<Card>(this.line*this.column);
+        this.hand = new ArrayList<Card>(this.raw * this.column);
         this.rdm = new Random();
         this.scanner = new Scanner(System.in);
         this.name = "Default_name";
     }
 
-    public int getLine(){
-        return this.line;
+    /**
+     * Give the number of column in the player's hand
+     * 
+     * @return (int) Number of raw 
+     */
+    public int getRaws(){
+        return this.raw;
     }
 
-    public int getColumn(){
+    /**
+     * Give the number of column in the player's hand
+     * 
+     * @return (int) Number of columns 
+     */
+    public int getColumns(){
         return this.column;
     }
 
-    public void revealCard(int line, int column){
-        Card card = this.hand.get(line*this.getColumn()+column);
+    /**
+     * Can reveal a card from player's hand
+     * 
+     * @param raw (int) raw of the selected card
+     * @param column (int) column of the selected card
+     * 
+     * @return no return value
+     */
+    public void revealCard(int raw, int column){
+        Card card = this.hand.get(raw*this.getColumns()+column);
         card.reveal();
     }
 
-    public Card getCard(int line, int column){
-        if (line < this.getLine() && column<this.getColumn()){
-            return this.hand.get(line*this.getColumn()+column);
+    /**
+     * Give the selected card
+     * 
+     * @param raw (int) raw of the selected card
+     * @param column (int) column of the selected card
+     * 
+     * @return (Card) selected card 
+     */
+    public Card getCard(int raw, int column){
+        if (raw < this.getRaws() && column<this.getColumns()){
+            return this.hand.get(raw*this.getColumns()+column);
         } else {
             return null;
         }
     }
 
-    public Card exchangeCard(Card new_card, int line, int column){
-        int index = line*this.getColumn()+column;
+    /**
+     * Exchange a card from player's hand with an other card
+     * 
+     * @param new_card (Card) card to exchange with one of the player's hand
+     * @param raw (int) raw of the player's hand card 
+     * @param column (int) column of the player's hand card
+     * 
+     * @return (Card) player's hand card 
+     * 
+     * @exception raw no verification done here
+     * @exception colum no verification done here
+     */
+    public Card exchangeCard(Card new_card, int raw, int column){
+        int index = raw*this.getColumns()+column;
         Card card = this.hand.get(index);
         card.reveal();
         this.hand.set(index, new_card);
         return card;
     }
 
+    /**
+     * @return (boolean) true if the player if humain else false
+     */
     public boolean isHumain(){
         return this.human;
     }
 
+    /** 
+     * Allow to set a given hand for the player
+     * 
+     * @param new_hand (Arraylist<Card>) the new hand to give to the player
+     * 
+     * @return no return value
+    */
     public void setHand(ArrayList<Card> new_hand){
         this.hand = new_hand;
     }
 
+    /**
+     * @return (boolean) return true if all the player hand's card are revealed else false
+     */
     public boolean isHandRevealed(){
         for (Card card : hand) {
             if (!card.isVisible()){
@@ -79,6 +160,11 @@ public class Player {
         return true;
     }
 
+    /**
+     * Give the total value of the player's hand
+     * 
+     * @return (int) hand's value
+     */
     public int getHandValue(){
         int score = 0;
         for (Card card : hand) {
@@ -89,10 +175,15 @@ public class Player {
         return score;
     }
 
+    /**
+     * Write in the console the player's hand
+     * 
+     * @return no return value
+     */
     public void drawConsolHand(){
         Card card;
-        for(int i = 0;i<this.getLine();i++){
-            for(int j=0;j<this.getColumn();j++){
+        for(int i = 0;i<this.getRaws();i++){
+            for(int j=0;j<this.getColumns();j++){
                 card = this.getCard(i, j);
                 if (card.isVisible()){
                     System.out.print(card.getValue() + ";");
@@ -104,12 +195,24 @@ public class Player {
         }
     }
 
+    /**
+     * Allow to reveal all the card form the player's hand
+     * 
+     * @return no return value
+     */
     public void revealHand(){
         for (Card card : this.hand) {
             card.reveal();
         }
     }
 
+    /**
+     * Allow to choose a card from the player's hand
+     * 
+     * @param canBeNotVisible tell if the selected card has to be visible or not
+     * 
+     * @return (Card) the card selected
+     */
     public Card chooseCardFromHand(boolean canBeNotVisible){
         Card card = null;
         int [] coo;
@@ -121,25 +224,37 @@ public class Player {
         return card;
     }
 
+    /** 
+     * Allow humain layer to choose their card
+     * 
+     * @return (int [raw, column]) coordinat of the selected card 
+    */
     public int[] chooseXY(){
-        int [] coo = {-1,-1};
+        int [] coo = new int[2];
         if (this.isHumain()){
             do {
-                System.out.println("Enter line : ");
+                System.out.println("Enter raw : ");
                 coo[0] = this.scanner.nextInt();
-            }while(coo[0]>=this.getLine());
+            }while(coo[0]>=this.getRaws());
 
             do{
                 System.out.println("Enter column : ");
                 coo[1] = this.scanner.nextInt();
-            }while(coo[1]>=this.getColumn());
+            }while(coo[1]>=this.getColumns());
         } else {
-            coo[0] = rdm.nextInt(this.getLine());
-            coo[1] = rdm.nextInt(this.getColumn());
+            coo[0] = rdm.nextInt(this.getRaws());
+            coo[1] = rdm.nextInt(this.getColumns());
         }
         return coo;
     }
 
+    /**
+     * Allow the player to choose between 2 options
+     * 
+     * @param text (String) text to print to tell the choice
+     * 
+     * @return (int) 0 or 1
+     */
     public int chooseBetweenTwo(String text){
         int c = -1;
         int numberOfChoice = 2;
@@ -154,9 +269,18 @@ public class Player {
         return c;
     }
 
+    /**
+     * Allow to delete a whole column
+     * 
+     * @param column_index (int) the column number
+     * 
+     * @return no return value
+     * 
+     * @exception colum_index no verification done here
+     */
     public void hasColumn(int column_index){
-        for (int i = 0;i<this.getLine();i++){
-            int index = i*this.getColumn()+column_index-i;
+        for (int i = 0;i<this.getRaws();i++){
+            int index = i*this.getColumns()+column_index-i;
             this.hand.remove(index);
         }
         this.column -= 1;
