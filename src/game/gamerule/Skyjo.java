@@ -81,6 +81,7 @@ public class Skyjo extends Board{
         while(!isGameFinish()){
             this.round();
             this.updateScore();
+            this.printScore();
         }
         this.endGame();
 
@@ -96,13 +97,15 @@ public class Skyjo extends Board{
     }
 
     private void endGame(){
-        Player p;
-        for(int i = 0;i<this.getNumberOfPlayer();i++){
-            p = this.playerList.get(i);
-            p.revealHand();
-            this.scoreList[i] = p.getHandValue();
-            System.out.println("Score " + i + " : " + this.scoreList[i]);
+        int id_winner = 0;
+        for(int i = 0; i<this.getNumberOfPlayer();i++){
+            if(this.scoreList[id_winner] > this.scoreList[i]){
+                id_winner = i;
+            }
         }
+        Player p = this.playerList.get(id_winner);
+
+        System.out.println("THE WINNER IS : " + p + " WITH A SCORE OF : " + this.scoreList[id_winner]);
     }
 
     private void playerTrun(Player p){
@@ -154,6 +157,17 @@ public class Skyjo extends Board{
             if(hasColumn){
                 p.hasColumn(c);
             }
+        }
+    }
+
+    private void printScore(){
+        Player p;
+        int score;
+        System.out.println("Score : ");
+        for(int i = 0;i<this.getNumberOfPlayer();i++){
+            p = this.playerList.get(i);
+            score = this.scoreList[i];
+            System.out.println("\tPlayer " + p + "(" + i + ") : " + score);
         }
     }
 }

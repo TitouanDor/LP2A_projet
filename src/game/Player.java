@@ -11,6 +11,7 @@ public class Player {
     private int column;
     private Random rdm;
     private Scanner scanner;
+    private String name;
 
     public Player(){
         this.human = false;
@@ -19,6 +20,7 @@ public class Player {
         this.hand = new ArrayList<Card>(this.line*this.column);
         this.rdm = new Random();
         this.scanner = new Scanner(System.in);
+        this.name = "Default_name";
     }
 
     public Player(boolean human, int line, int column){
@@ -28,6 +30,7 @@ public class Player {
         this.hand = new ArrayList<Card>(this.line*this.column);
         this.rdm = new Random();
         this.scanner = new Scanner(System.in);
+        this.name = "Default_name";
     }
 
     public int getLine(){
@@ -157,5 +160,9 @@ public class Player {
             this.hand.remove(index);
         }
         this.column -= 1;
+    }
+
+    public String toString(){
+        return this.name;
     }
 }
