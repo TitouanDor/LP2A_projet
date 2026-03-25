@@ -150,4 +150,12 @@ public class Player {
         }
         return c;
     }
+
+    public void hasColumn(int column_index){
+        for (int i = 0;i<this.getLine();i++){
+            int index = i*this.getColumn()+column_index-i;
+            this.hand.remove(index);
+        }
+        this.column -= 1;
+    }
 }

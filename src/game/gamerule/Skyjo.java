@@ -49,7 +49,7 @@ public class Skyjo extends Board{
         return false;
     }
 
-    public void round(){
+    private void round(){
         this.setUpRound();
         Player playingPlayer;
         int i = 0;
@@ -77,25 +77,23 @@ public class Skyjo extends Board{
     }
 
     public void game(){
-        for (int score : this.scoreList) {
-            score = 0;
+        for(int i = 0;i<this.getNumberOfPlayer();i++){
+            this.scoreList[i] = 0;
         }
-
-        while(isGameFinish()){
+        while(!isGameFinish()){
             this.round();
             this.updateScore();
         }
+        this.endGame();
 
     }
 
     private void updateScore(){
-        int score;
         Player p;
         for(int i = 0;i<this.getNumberOfPlayer();i++){
-            score = this.scoreList[i];
             p = this.playerList.get(i);
             p.revealHand();
-            score += p.getHandValue();
+            this.scoreList[i] += p.getHandValue();
         }
     }
 
@@ -106,7 +104,6 @@ public class Skyjo extends Board{
             p.revealHand();
             this.scoreList[i] = p.getHandValue();
             System.out.println("Score " + i + " : " + this.scoreList[i]);
-            p.drawConsolHand();
         }
     }
 
@@ -130,6 +127,28 @@ public class Skyjo extends Board{
         coo = p.chooseXY();
         cardToReplace = p.exchangeCard(cardInPlay, coo[0], coo[1]);
         this.graveward.add(cardToReplace);
+        this.updatePlayerHand(p);
+    }
+
+    private void updatePlayerHand(Player p){
+        boolean hasColumn;
+        Card ref;
+        Card card;
+        for(int c = 0;c<p.getColumn();c++){
+            hasColumn = true;
+            ref = p.getCard(0, c);
+            for(int l = 0;l<p.getLine();l++){
+                card = p.getCard(l, c);
+                if (!card.isVisible()){
+                    hasColumn = false;
+                } else if(ref.getValue()!= card.getValue()){
+                    hasColumn = false;
+                }
+            }
+            if(hasColumn){
+                p.hasColumn(c);
+            }
+        }
     }
 
 }
