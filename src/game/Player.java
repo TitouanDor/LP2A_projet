@@ -1,5 +1,7 @@
 package game;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.Scanner;
 
 
 public class Player {
@@ -7,12 +9,16 @@ public class Player {
     private ArrayList<Card> hand;
     private int line;
     private int column;
+    private Random rdm;
+    private Scanner scanner;
 
     public Player(){
         this.human = false;
         this.line = 4;
         this.column = 3;
         this.hand = new ArrayList<Card>(this.line*this.column);
+        this.rdm = new Random();
+        this.scanner = new Scanner(System.in);
     }
 
     public Player(boolean human, int line, int column){
@@ -20,6 +26,8 @@ public class Player {
         this.line = line;
         this.column = column;
         this.hand = new ArrayList<Card>(this.line*this.column);
+        this.rdm = new Random();
+        this.scanner = new Scanner(System.in);
     }
 
     public int getLine(){
@@ -98,4 +106,37 @@ public class Player {
             card.reveal();
         }
     }
+
+    public Card chooseCardFromHand(){
+        Card card = null;
+        int choosenLine = this.getLine();
+        int choosenColumn = this.getColumn();
+        if (this.isHumain()){
+            //ASK FOR A CARD FROM HIS HAND
+            do {
+                System.out.println("Enter line : ");
+                choosenLine = this.scanner.nextInt();
+            }while(choosenLine>=this.getLine());
+
+            do{
+                System.out.println("Enter column : ");
+                choosenColumn = this.scanner.nextInt();
+            }while(choosenColumn>=this.getColumn());
+            card = this.getCard(choosenLine, choosenColumn);
+        } else {
+            do{
+                choosenLine = rdm.nextInt(this.getLine());
+                choosenColumn = rdm.nextInt(this.getColumn());
+                //System.out.println("Coo : " + choosenLine + ";" + choosenColumn);
+                card = this.getCard(choosenLine, choosenColumn);
+            }while(card == null || card.isVisible());
+        }
+        return card;
+    }
+
+    public void playerTrun(){
+        Card card = chooseCardFromHand();
+        card.reveal();
+    }
+
 }
