@@ -67,4 +67,35 @@ public class Player {
         }
         return true;
     }
+
+    public int getHandValue(){
+        int score = 0;
+        for (Card card : hand) {
+            if(card.isVisible()){
+                score += card.getValue();
+            }
+        }
+        return score;
+    }
+
+    public void drawConsolHand(){
+        Card card;
+        for(int i = 0;i<this.getLine();i++){
+            for(int j=0;j<this.getColumn();j++){
+                card = this.getCard(i, j);
+                if (card.isVisible()){
+                    System.out.print(card.getValue() + ";");
+                } else {
+                    System.out.print("#;");
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    public void revealHand(){
+        for (Card card : this.hand) {
+            card.reveal();
+        }
+    }
 }

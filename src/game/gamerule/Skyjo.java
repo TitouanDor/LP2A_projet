@@ -8,17 +8,20 @@ import game.Player;
 public class Skyjo extends Board{
     private boolean isUiActive;
     private Random rdm;
+    private int [] scoreList;
 
     public Skyjo(){
         super();
         this.rdm = new Random();
         this.isUiActive = false;
+        this.scoreList = new int[this.getNumberOfPlayer()];
     }
 
     public Skyjo(int NbPlayer, int line, int column){
         super(NbPlayer, line, column);
         this.rdm = new Random();
         this.isUiActive = false;
+        this.scoreList = new int[this.getNumberOfPlayer()];
     }
 
     private void setUpGame(){
@@ -55,12 +58,14 @@ public class Skyjo extends Board{
             if(this.isUiActive){
 
             } else {
-                this.drawWithoutUI(playingPlayer);
+                playingPlayer.drawConsolHand();
             }
             
             this.playerTurn(playingPlayer);
             i++;
         }
+
+        this.endGame();
     }
 
     private void playerTurn(Player p){
@@ -73,25 +78,21 @@ public class Skyjo extends Board{
             do{
                 line = rdm.nextInt(p.getLine());
                 column = rdm.nextInt(p.getColumn());
-                System.out.println("Coo : " + line + ";" + column);
+                //System.out.println("Coo : " + line + ";" + column);
                 card = p.getCard(line, column);
             }while(card == null || card.isVisible());
             card.reveal();
         }
     }
 
-    private void drawWithoutUI(Player p){
-        Card card;
-        for(int i = 0;i<p.getLine();i++){
-            for(int j=0;j<p.getColumn();j++){
-                card = p.getCard(i, j);
-                if (card.isVisible()){
-                    System.out.print(card.getValue() + ";");
-                } else {
-                    System.out.print("#;");
-                }
-            }
-            System.out.println();
+    private void endGame(){
+        Player p;
+        for(int i = 0;i<this.getNumberOfPlayer();i++){
+            p = this.playerList.get(i);
+            p.revealHand();
+            this.scoreList[i] = p.getHandValue();
+            System.out.println("Score " + i + " : " + this.scoreList[i]);
+            p.drawConsolHand();
         }
     }
 }
