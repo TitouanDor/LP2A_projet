@@ -24,10 +24,11 @@ public class Skyjo extends Board{
             player.setHand(lib.drawSetUp(nbCard));
             Card card;
             for(int i = 0;i<2;i++){
-                card = player.chooseCardFromHand();
+                card = player.chooseCardFromHand(true);
                 card.reveal();
             }
         }
+        this.graveward.add(this.lib.drawRandomCard(true));
     }
 
     private boolean isFinish(){
@@ -55,10 +56,11 @@ public class Skyjo extends Board{
                 this.drawBoardUi();
 
             } else if (playingPlayer.isHumain()){
+                this.drawBoardWithoutUi();
                 playingPlayer.drawConsolHand();
             }
             
-            playingPlayer.playerTrun();
+            this.playerTrun(playingPlayer);
             i++;
         }
 
@@ -75,4 +77,30 @@ public class Skyjo extends Board{
             p.drawConsolHand();
         }
     }
+
+    private void playerTrun(Player p){
+        int placeToDraw = p.chooseLibOrGrave();
+        Card cardInPlay;
+        int [] coo;
+        Card cardToReplace;
+        if (placeToDraw == 0){
+            cardInPlay = this.lib.drawRandomCard(true);
+            System.out.println(cardInPlay.getValue());
+        } else if (placeToDraw == 1){
+            int index = this.graveward.size()-1;
+            System.out.println("size : " + index);
+            cardInPlay = this.graveward.get(index);
+            System.out.println("Get");
+            this.graveward.remove(index);
+            System.out.println("remove");
+            cardInPlay.reveal();
+        } else {
+            cardInPlay = null;
+        }
+
+        coo = p.chooseXY();
+        cardToReplace = p.exchangeCard(cardInPlay, coo[0], coo[1]);
+        this.graveward.add(cardToReplace);
+    }
+
 }

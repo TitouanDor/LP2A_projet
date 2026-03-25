@@ -107,36 +107,47 @@ public class Player {
         }
     }
 
-    public Card chooseCardFromHand(){
+    public Card chooseCardFromHand(boolean canBeNotVisible){
         Card card = null;
-        int choosenLine = this.getLine();
-        int choosenColumn = this.getColumn();
-        if (this.isHumain()){
-            //ASK FOR A CARD FROM HIS HAND
-            do {
-                System.out.println("Enter line : ");
-                choosenLine = this.scanner.nextInt();
-            }while(choosenLine>=this.getLine());
-
-            do{
-                System.out.println("Enter column : ");
-                choosenColumn = this.scanner.nextInt();
-            }while(choosenColumn>=this.getColumn());
-            card = this.getCard(choosenLine, choosenColumn);
-        } else {
-            do{
-                choosenLine = rdm.nextInt(this.getLine());
-                choosenColumn = rdm.nextInt(this.getColumn());
-                //System.out.println("Coo : " + choosenLine + ";" + choosenColumn);
-                card = this.getCard(choosenLine, choosenColumn);
-            }while(card == null || card.isVisible());
-        }
+        int [] coo;
+        do{
+            coo = this.chooseXY();
+            card = this.getCard(coo[0], coo[1]);
+        }while(!canBeNotVisible && !card.isVisible());
+        
         return card;
     }
 
-    public void playerTrun(){
-        Card card = chooseCardFromHand();
-        card.reveal();
+    public int[] chooseXY(){
+        int [] coo = {-1,-1};
+        if (this.isHumain()){
+            do {
+                System.out.println("Enter line : ");
+                coo[0] = this.scanner.nextInt();
+            }while(coo[0]>=this.getLine());
+
+            do{
+                System.out.println("Enter column : ");
+                coo[1] = this.scanner.nextInt();
+            }while(coo[1]>=this.getColumn());
+        } else {
+            coo[0] = rdm.nextInt(this.getLine());
+            coo[1] = rdm.nextInt(this.getColumn());
+        }
+        return coo;
     }
 
+    public int chooseLibOrGrave(){
+        int c = -1;
+        int numberOfChoice = 2;
+        if(this.isHumain()){
+            do{
+                System.out.println("Do you want to draw the top Card of : \n(0) : the library\n(1) : the graveward");
+                c = this.scanner.nextInt();
+            }while (c<=0 && c>numberOfChoice);
+        } else {
+            c = this.rdm.nextInt(numberOfChoice);
+        }
+        return c;
+    }
 }

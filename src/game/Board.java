@@ -38,4 +38,15 @@ public class Board {
     protected void drawBoardUi(){
         //PUT HOW TO DRAW THE UI HERE
     }
+
+    protected void drawBoardWithoutUi(){
+        System.out.print("Lib : #\t Grave : ");
+        int gravewardSize = this.graveward.size();
+        if( gravewardSize != 0){
+            Card card = this.graveward.get(gravewardSize-1);
+            System.out.println(card.getValue());
+        } else {
+            System.out.println("None");
+        }
+    }
 }
