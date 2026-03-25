@@ -5,32 +5,57 @@ import java.util.Scanner;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+/**
+ * Represents the card library (deck) used in the game.
+ * This class loads cards from a data file, stores them in memory,
+ * and provides methods to draw cards randomly or by index.
+ */
 public class Library {
 
+    /** List of all cards currently available in the library. */
     private ArrayList<Card> list;
+
+    /** Scanner used to read the card data file. */
     private Scanner reader;
 
-    public int getCardNumber(){
-        return this.list.size();
-    }
-
-    public Library(){
+    /**
+     * Constructs a new Library by loading cards from the file <code>card.dat</code>.
+     * If the file cannot be found, an error message is printed to standard error.
+     */
+    public Library() {
         this.list = new ArrayList<Card>();
         try {
             this.reader = new Scanner(new FileInputStream("./../card.dat"));
             loadCard();
-        } catch (FileNotFoundException e){
-            System.err.println("Coudn't find the file card.dat" + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.err.println("Couldn't find the file card.dat: " + e.getMessage());
         }
     }
+    
+    /**
+     * Returns the number of cards remaining in the library.
+     *
+     * @return total number of cards left
+     */
+    public int getCardNumber() {
+        return this.list.size();
+    }
 
-    private void loadCard(){
-        while(this.reader.hasNextLine()){
+    /**
+     * Loads cards from the data file into the library.
+     * Lines starting with '#' are treated as comments and ignored.
+     * Each valid line is formatted as: <code>number;value;name</code>,
+     * where <code>number</code> determines how many identical cards are added.
+     * 
+     * @return no return value
+     */
+    private void loadCard() {
+        while (this.reader.hasNextLine()) {
             String line = reader.nextLine();
-            if (!line.startsWith("#")){
+            if (!line.startsWith("#")) {
                 String[] parts = line.split(";");
                 int number = Integer.parseInt(parts[0]);
-                for(int i = 0; i<number; i++){
+                for (int i = 0; i < number; i++) {
                     int value = Integer.parseInt(parts[1]);
                     this.list.add(new Card(value, parts[2]));
                 }
@@ -38,35 +63,64 @@ public class Library {
         }
     }
 
-    public void showAllCard(){
+    /**
+     * Displays all cards currently in the library.
+     * 
+     * @return no return value
+     */
+    public void showAllCard() {
         for (Card card : this.list) {
             System.out.println(card.toString());
         }
     }
 
-    public Card drawRandomCard(boolean isReveled){
+    /**
+     * Draws a random card from the library and removes it from the list.
+     *
+     * @param isReveled if true, the drawn card is revealed immediately
+     * 
+     * @return the drawn Card object
+     */
+    public Card drawRandomCard(boolean isReveled) {
         Random rdm = new Random();
         int index = rdm.nextInt(this.getCardNumber());
         Card card = this.list.get(index);
         this.list.remove(index);
-        if (isReveled){
+        if (isReveled) {
             card.reveal();
         }
         return card;
     }
 
-    public Card draw(int i, boolean isReveled){
-        Card card = this.list.get(i);
-        this.list.remove(i);
-        if (isReveled){
+    /**
+     * Draws a specific card from the library by index and removes it.
+     *
+     * @param index index of the card to draw
+     * @param isReveled if true, the card is revealed immediately
+     * 
+     * @return the drawn Card object
+     * 
+     * @exception index no verification done here
+     */
+    public Card draw(int index, boolean isReveled) {
+        Card card = this.list.get(index);
+        this.list.remove(index);
+        if (isReveled) {
             card.reveal();
         }
         return card;
     }
 
-    public ArrayList<Card> drawSetUp(int cardNumber){
+    /**
+     * Draws a given number of random cards for game setup.
+     *
+     * @param cardNumber number of cards to draw
+     * 
+     * @return a list containing the drawn cards
+     */
+    public ArrayList<Card> drawSetUp(int cardNumber) {
         ArrayList<Card> list = new ArrayList<Card>(cardNumber);
-        for (int i = 0;i<cardNumber;i++){
+        for (int i = 0; i < cardNumber; i++) {
             list.add(this.drawRandomCard(false));
         }
         return list;
