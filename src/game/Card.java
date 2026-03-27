@@ -16,14 +16,17 @@ public class Card {
     /** True if the card is visible (revealed), false otherwise. */
     private boolean visible;
 
+    /** The color of the card for the UI */
+    private String color;
+
     /**
      * Default constructor.
-     * Creates a card with a value of 0, a default name, and hidden visibility.
      */
     public Card() {
         this.value = 0;
         this.name = "Default_name";
         this.visible = false;
+        this.color = "blue";
     }
 
     /**
@@ -32,11 +35,13 @@ public class Card {
      *
      * @param value the card's numerical value
      * @param name  the name or label of the card
+     * @param color the name of the card's color
      */
-    public Card(int value, String name) {
+    public Card(int value, String name, String color) {
         this.value = value;
         this.name = name;
         this.visible = false;
+        this.color = color;
     }
 
     /**
@@ -84,7 +89,7 @@ public class Card {
      * @return a string description of the card
      */
     public String toString() {
-        return "Card " + this.name + " value of: " + value + ", visible: " + this.isVisible();
+        return "Card " + this.getName() + " value of: " + this.getName() + "color : " + this.color + ", visible: " + this.isVisible();
     }
 
     /**
@@ -94,5 +99,14 @@ public class Card {
      */
     public int getValue() {
         return this.value;
+    }
+
+    /**
+     * Return the name of the card's color
+     * 
+     * @return color's name
+     */
+    public String getColor(){
+        return this.color;
     }
 }

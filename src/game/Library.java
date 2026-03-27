@@ -57,7 +57,7 @@ public class Library {
                 int number = Integer.parseInt(parts[0]);
                 for (int i = 0; i < number; i++) {
                     int value = Integer.parseInt(parts[1]);
-                    this.list.add(new Card(value, parts[2]));
+                    this.list.add(new Card(value, parts[2], parts[3]));
                 }
             }
         }
