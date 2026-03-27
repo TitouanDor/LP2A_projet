@@ -50,16 +50,29 @@ public class Library {
      * @return no return value
      */
     private void loadCard() {
+        int numberOfPart = 0;
+        int id_line = 0;
+        String [] parts;
         while (this.reader.hasNextLine()) {
             String line = reader.nextLine();
+            System.out.println(line);
             if (!line.startsWith("#")) {
-                String[] parts = line.split(";");
-                int number = Integer.parseInt(parts[0]);
-                for (int i = 0; i < number; i++) {
-                    int value = Integer.parseInt(parts[1]);
-                    this.list.add(new Card(value, parts[2], parts[3]));
+                parts = line.split(";");
+                if(parts.length == numberOfPart){
+                    int number = Integer.parseInt(parts[0]);
+                    for (int i = 0; i < number; i++) {
+                        int value = Integer.parseInt(parts[1]);
+                        this.list.add(new Card(value, parts[2], parts[3]));
+                    }
+                } else {
+                    System.out.println("Line " + id_line + " skipped");
                 }
+                
+            } else {
+                parts = line.split(";");
+                numberOfPart = parts.length;
             }
+            id_line ++;
         }
     }
 
@@ -83,7 +96,11 @@ public class Library {
      */
     public Card drawRandomCard(boolean isReveled) {
         Random rdm = new Random();
-        int index = rdm.nextInt(this.getCardNumber());
+        int verif = this.getCardNumber();
+        if(verif<0){
+            verif = 0;
+        }
+        int index = rdm.nextInt(verif);
         Card card = this.list.get(index);
         this.list.remove(index);
         if (isReveled) {
