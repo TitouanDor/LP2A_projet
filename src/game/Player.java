@@ -17,6 +17,12 @@ public class Player {
     /** List of cards currently in the player's hand. */
     private ArrayList<Card> hand;
 
+    /** Max number for rows */
+    private int maxRaw;
+
+    /**Max number of columns */
+    private int maxColumn;
+
     /** Number of rows in the player's hand grid. */
     private int raw;
 
@@ -38,8 +44,8 @@ public class Player {
      */
     public Player() {
         this.human = false;
-        this.raw = 4;
-        this.column = 3;
+        this.maxRaw = 4;
+        this.maxColumn = 3;
         this.hand = new ArrayList<Card>(this.raw * this.column);
         this.rdm = new Random();
         this.scanner = new Scanner(System.in);
@@ -55,12 +61,22 @@ public class Player {
      */
     public Player(boolean human, int raw, int column) {
         this.human = human;
-        this.raw = raw;
-        this.column = column;
+        this.maxRaw = raw;
+        this.maxColumn = column;
         this.hand = new ArrayList<Card>(this.raw * this.column);
         this.rdm = new Random();
         this.scanner = new Scanner(System.in);
         this.name = "Default_name";
+    }
+
+    /**
+     * Reset column and raw
+     * 
+     * @return no return value
+     */
+    public void resetRC(){
+        this.column = this.maxColumn;
+        this.raw = this.maxRaw;
     }
 
     /**

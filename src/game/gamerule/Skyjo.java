@@ -58,6 +58,7 @@ public class Skyjo extends Board {
     protected void setUpRound() {
         int nbCard = 0;
         for (Player player : this.playerList) {
+            player.resetRC();
             nbCard = player.getColumns() * player.getRaws();
             player.setHand(lib.drawSetUp(nbCard));
             Card card;
