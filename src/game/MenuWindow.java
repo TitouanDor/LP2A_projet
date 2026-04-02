@@ -1,0 +1,103 @@
+package game;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder; 
+import java.awt.*;
+import java.awt.event.ActionListener;
+
+public class MenuWindow extends JFrame {
+    private JButton btnClassic, btnShort, btnInvert, btnInvertShort, btnQuit, btnRules;
+    private JCheckBox checkHuman1, checkHuman2;
+
+    public MenuWindow() {
+        setTitle("UTBM Skyjo - Main Menu");
+        setSize(600, 500);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        //main panel 
+        JPanel mainPanel = new JPanel(new BorderLayout(20, 20));
+        mainPanel.setBorder(new EmptyBorder(30, 50, 30, 50));
+        mainPanel.setBackground(new Color(245, 245, 245)); // UPDATE COLOR AFTER 
+
+        //title 
+        JLabel title = new JLabel("Welcome to the UTBM Skyjo", SwingConstants.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 20)); //UPDATE POLICE ECRITURE 
+        title.setForeground(new Color(0, 85, 164));
+        mainPanel.add(title, BorderLayout.NORTH);
+
+        // choose if you are a human or not 
+        JPanel centerPanel = new JPanel(new GridLayout(3, 1, 10, 10));
+        centerPanel.setOpaque(false);
+
+        JPanel playersPanel = new JPanel();
+        playersPanel.setOpaque(false);
+        checkHuman1 = new JCheckBox("Player 1 human ?", true);
+        checkHuman2 = new JCheckBox("Player 2 human ?", true);
+        playersPanel.add(checkHuman1);
+        playersPanel.add(checkHuman2);
+
+        centerPanel.add(new JLabel ("Configure your player", SwingConstants.CENTER));
+        centerPanel.add(playersPanel);
+
+        //button rules 
+        btnRules = createStyledButton("Game Rules");
+        btnRules.setBackground(new Color(209,50,17));
+        centerPanel.add(btnRules);
+
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+
+        // mode buttons 
+        JPanel southPanel = new JPanel(new BorderLayout(10,10));
+        southPanel.setOpaque(false);
+
+        JPanel gridButtons = new JPanel(new GridLayout(2,2,15,15));
+        gridButtons.setOpaque(false);
+
+        btnClassic = createStyledButton("Classic Mode");
+        btnShort = createStyledButton("Short Mode (1 round)");
+        btnInvert = createStyledButton("Invert Mode");
+        btnInvertShort = createStyledButton("Invert Short Mode (1 round)");
+        
+        gridButtons.add(btnClassic);
+        gridButtons.add(btnShort);
+        gridButtons.add(btnInvert);
+        gridButtons.add(btnInvertShort);
+
+        btnQuit = createStyledButton("Quit the game");
+        btnQuit.setForeground(new Color(150, 0,0));
+
+        southPanel.add(gridButtons, BorderLayout.CENTER);
+        southPanel.add(btnQuit, BorderLayout.SOUTH);
+
+        mainPanel.add(southPanel, BorderLayout.SOUTH);
+    
+        add(mainPanel);
+        setLocationRelativeTo(null); // center the window 
+        setVisible(true);
+    }
+
+    // method for styling buttons 
+    private JButton createStyledButton(String text) {
+        JButton btn = new JButton(text);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 14)); //UDPATE POLICE AFTER 
+        btn.setBackground(Color.WHITE); //UPDATE COLOR AFTER 
+        btn.setFocusPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return btn;
+    }
+
+    // controller methods
+    public void setMenuListener(ActionListener listener) {
+        btnClassic.addActionListener(listener);
+        btnShort.addActionListener(listener);
+        btnInvert.addActionListener(listener);
+        btnInvertShort.addActionListener(listener);
+        btnQuit.addActionListener(listener);
+        btnRules.addActionListener(listener);
+    }
+
+    // Getters for human player or not 
+    public boolean[] getSelectedPlayers() {
+        return new boolean[]{checkHuman1.isSelected(), checkHuman2.isSelected()};
+    }
+}
