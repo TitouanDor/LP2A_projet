@@ -25,7 +25,8 @@ public class MenuController implements ActionListener {
         // button for game rules 
         if (command.equals("Game Rules")) {
             System.out.println("Display of rules");
-            // ajout de new RulesWindow().setVisible(true) après pour la création de la page;
+            RulesWindow rules = new RulesWindow();
+            rules.setVisible(true);
             return;
         }
 
@@ -33,11 +34,11 @@ public class MenuController implements ActionListener {
         Skyjo game;
 
         // instanciate the good model with the clicked button 
-        if (command.equals("Short Mode (1 round")) {
+        if (command.equals("Short Mode (1 round)")) {
             game = new ShortSkyjo(3, 4, players);
         } else if (command.equals("Invert Mode")) {
             game = new InvertSkyjo(3, 4, players);
-        } else if (command.equals("Invert Short Mode (1 round")) {
+        } else if (command.equals("Invert Short Mode (1 round)")) {
             game = new InvertShortSkyjo(3, 4, players);
         } else {
             game = new Skyjo(3, 4, players);
