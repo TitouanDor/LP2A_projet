@@ -1,6 +1,7 @@
 import game.MenuController;
 import game.MenuWindow;
 import game.gamerule.*;
+import game.RulesWindow;
 
 public class Main {
     public static void main(String[] args) {

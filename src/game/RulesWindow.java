@@ -25,7 +25,7 @@ public class RulesWindow extends JFrame {
         rulesText.setFont(new Font("Segoe UI", Font.PLAIN, 14));  //UPDATE POLICE 
         
         rulesText.setText(
-            "Welcome to UTBM SKYJO\n\n" +
+            "Welcome to UTBM SKYJO \n\n" +
             "1. GOAL OF THE GAME :\n" +
             "Have as few points as possible at the end of the game (except in Invert Mode).\n\n" +
             "2. PROGRESS :\n" +
@@ -33,10 +33,10 @@ public class RulesWindow extends JFrame {
             "- Each turn, draw one card or take the discard.\n" +
             "- You then have 2 possibilities :\n" +
             "- You can exchange a card from your deck for the card you drew in the stock pile or in the discard.\n" +
-            "- Or you don't want the card and you put it in the discard but you have to return one of your card face down.\n" +
-            " HOW TO FINISH A ROUND :\n" +
-            "- When you turn you last card face down, you end the round and you have to finish the round (so the others players have more than a chance to change their cards).\n"+
-            "3. SPECIALS MODS :\n" +
+            "- Or you don't want the card and you put it in the discard but you have to return one of your card face down.\n\n" +
+            "3. HOW TO FINISH A ROUND :\n" +
+            "- When you turn you last card face down, you end the round and you have to finish the round (so the others players have more than a chance to change their cards).\n\n"+
+            "4. SPECIALS MODS :\n" +
             "- Short Mode : the game stops at the end of a round.\n" +
             "- Invert Mode : the goal is to achieve a score of 100 first !\n" +
             "- Invert Short Mode : the game stops at the end of a round but you need the biggest score !"

@@ -41,7 +41,7 @@ public class MenuWindow extends JFrame {
 
         //button rules 
         btnRules = createStyledButton("Game Rules");
-        btnRules.setBackground(new Color(209,50,17));
+        btnRules.setBackground(new Color(240,74,43));
         centerPanel.add(btnRules);
 
         mainPanel.add(centerPanel, BorderLayout.CENTER);

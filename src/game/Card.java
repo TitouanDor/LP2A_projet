@@ -19,6 +19,9 @@ public class Card {
     /** The color of the card for the UI */
     private String color;
 
+    /** Reference to the UTBM data (Prof, specific color, etc.) */
+    private CardData data;
+
     /**
      * Default constructor.
      */
@@ -32,16 +35,14 @@ public class Card {
     /**
      * Constructs a card with the specified value and name.
      * The card is hidden by default.
-     *
-     * @param value the card's numerical value
-     * @param name  the name or label of the card
-     * @param color the name of the card's color
+     * We use CardData 
      */
-    public Card(int value, String name, String color) {
-        this.value = value;
-        this.name = name;
+    public Card(CardData data) {
+        this.data = data;
+        this.value = data.getValue();
+        this.name = data.getName();
         this.visible = false;
-        this.color = color;
+        this.data.getColor(); 
     }
 
     /**
@@ -80,6 +81,13 @@ public class Card {
      */
     public void reveal() {
         this.visible = true;
+    }
+
+    /**
+     * Getter to access the full data (useful for CardView)
+     */
+    public CardData getData() {
+        return this.data;
     }
 
     /**

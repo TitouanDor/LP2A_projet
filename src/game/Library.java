@@ -50,30 +50,41 @@ public class Library {
      * @return no return value
      */
     private void loadCard() {
-        int numberOfPart = 0;
         int id_line = 0;
-        String [] parts;
         while (this.reader.hasNextLine()) {
-            String line = reader.nextLine();
-            System.out.println(line);
-            if (!line.startsWith("#")) {
-                parts = line.split(";");
-                if(parts.length == numberOfPart){
-                    int number = Integer.parseInt(parts[0]);
-                    for (int i = 0; i < number; i++) {
-                        int value = Integer.parseInt(parts[1]);
-                        this.list.add(new Card(value, parts[2], parts[3]));
-                    }
-                } else {
-                    System.out.println("Line " + id_line + " skipped");
-                }
-                
-            } else {
-                parts = line.split(";");
-                numberOfPart = parts.length;
+            String line = reader.nextLine().trim();
+            
+            // We ignore the comment lines or empty ones
+            if (line.isEmpty() || line.startsWith("#")) {
+                id_line++;
+                continue;
             }
-            id_line ++;
+
+            String[] parts = line.split(";");
+            
+            // file card.dat with 4 column (ex : 5;-2;Montavon;blue )
+            if(parts.length == 4){
+                try {
+                    int count = Integer.parseInt(parts[0]);
+                    int value = Integer.parseInt(parts[1]);
+                    String name = parts[2];
+                    String colorStr = parts[3];
+
+                    CardData profData = new CardData(value, name, colorStr);
+
+                    //create the number for each card (ex there are 5 cards -2)
+                    for (int i = 0; i < count; i++) {
+                        this.list.add(new Card(profData));
+                    }
+                } catch (NumberFormatException e) {
+                    System.err.println("Error parsing numbers on line " + id_line);
+                }
+            } else {
+                System.out.println("Line " + id_line + " skipped (wrong format)");
+            }
+            id_line++;
         }
+        this.reader.close(); // close reader 
     }
 
     /**
