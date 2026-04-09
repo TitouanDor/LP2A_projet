@@ -1,6 +1,8 @@
-package game;
+package ui;
 
+import game.Player;
 import game.gamerule.Skyjo;
+
 import javax.swing.*;
 import java.awt.*;
 

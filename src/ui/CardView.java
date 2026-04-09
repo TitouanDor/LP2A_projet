@@ -1,5 +1,8 @@
-package game;
+package ui;
 import javax.swing.*;
+
+import game.CardData;
+
 import java.awt.*;
 
 
