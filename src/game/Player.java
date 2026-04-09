@@ -44,6 +44,8 @@ public class Player {
      */
     public Player() {
         this.human = false;
+        this.raw = 4;
+        this.column = 3; 
         this.maxRaw = 4;
         this.maxColumn = 3;
         this.hand = new ArrayList<Card>(this.raw * this.column);
@@ -61,6 +63,8 @@ public class Player {
      */
     public Player(boolean human, int raw, int column) {
         this.human = human;
+        this.raw = raw;
+        this.column = column;
         this.maxRaw = raw;
         this.maxColumn = column;
         this.hand = new ArrayList<Card>(this.raw * this.column);

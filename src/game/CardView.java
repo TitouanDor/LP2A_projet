@@ -11,6 +11,17 @@ public class CardView extends JPanel {
         this.data = data;
         this.setPreferredSize(new Dimension(100, 140));
         this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1, true));
+
+        this.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                // if the card is hidden, it must be returned
+                if (!isFaceUp) {
+                    setFaceUp(true);
+                    System.out.println("reveal card : " + data.getName());
+                }
+            }
+        });
     }
 
     public void setFaceUp(boolean faceUp) {

@@ -35,22 +35,22 @@ public class MenuController implements ActionListener {
 
         // instanciate the good model with the clicked button 
         if (command.equals("Short Mode (1 round)")) {
-            System.out.println("Launch for the short mode");
             game = new ShortSkyjo(3, 4, players);
         } else if (command.equals("Invert Mode")) {
-            System.out.println("Launch for the Invert mode");
             game = new InvertSkyjo(3, 4, players);
         } else if (command.equals("Invert Short Mode (1 round)")) {
-            System.out.println("Launch for the Invert short mode");
-            game = new InvertShortSkyjo(3, 4, players);
+         game = new InvertShortSkyjo(3, 4, players);
         } else {
-            System.out.println("Launch for the classic mode");
             game = new Skyjo(3, 4, players);
         }
 
-        view.dispose(); // close the menu
+        //initialize the game (deal cards to players)
+        game.setUpRound();
         
         // start the game 
-        game.game(); 
+        GameWindow gameWindow = new GameWindow(game);
+        gameWindow.setVisible(true);
+        
+        view.dispose(); // close the menu
     }
 }

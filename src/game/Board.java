@@ -18,6 +18,9 @@ public class Board {
     /** The number of players in the current game. */
     private int numberOfPlayer;
 
+    /** ID of the player whose turn it is. */
+    protected int id_player = 0;
+
     /** List of all players currently on the board. */
     protected ArrayList<Player> playerList;
 
@@ -71,12 +74,22 @@ public class Board {
     }
 
     /**
-     * Draws the board in a graphical or interactive UI mode.
-     * 
-     * @return no return value
+     * Access a specific player by index.
+     * Required for GameWindow.
      */
-    protected void drawBoardUi() {
-        // PUT HOW TO DRAW THE UI HERE
+    public Player getPlayer(int index) {
+        if (index >= 0 && index < this.playerList.size()) {
+            return this.playerList.get(index);
+        }
+        return null;
+    }
+
+    /**
+     * Access the current player.
+     * Required for GameWindow.
+     */
+    public Player getCurrentPlayer() {
+        return this.playerList.get(this.id_player);
     }
 
     /**

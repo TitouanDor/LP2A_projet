@@ -27,9 +27,10 @@ public class Card {
      */
     public Card() {
         this.value = 0;
-        this.name = "Default_name";
+        this.name = "empty";
         this.visible = false;
         this.color = "blue";
+        this.data = new CardData(0,"Default", "blue" );
     }
 
     /**
