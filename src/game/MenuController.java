@@ -39,10 +39,12 @@ public class MenuController implements ActionListener {
         } else if (command.equals("Invert Mode")) {
             game = new InvertSkyjo(3, 4, players);
         } else if (command.equals("Invert Short Mode (1 round)")) {
-         game = new InvertShortSkyjo(3, 4, players);
+            game = new InvertShortSkyjo(3, 4, players);
         } else {
             game = new Skyjo(3, 4, players);
         }
+
+        game.setUiActive(true);
 
         //initialize the game (deal cards to players)
         game.setUpRound();

@@ -40,8 +40,14 @@ public class Board {
         }
         this.graveward = new ArrayList<Card>();
         this.lib = new Library();
-        this.isUiActive = false;
+        this.isUiActive = true;
     }
+
+    // À ajouter dans Board.java
+    public void setUiActive(boolean active) {
+        this.isUiActive = active;
+    }
+    
 
     /**
      * Configurable board constructor.
