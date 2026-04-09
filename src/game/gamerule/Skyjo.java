@@ -58,17 +58,28 @@ public class Skyjo extends Board {
     public void setUpRound() {
         //security 
         if (this.lib == null || this.lib.getCardNumber() == 0) {
-        System.err.println("CRITICAL ERROR: The library is empty or not loaded");
-        System.err.println("Check that the card.dat file is in the right place.");
-        return; // On arrête la méthode ici pour éviter le crash
-    }
+            System.err.println("CRITICAL ERROR: The library is empty or not loaded");
+            System.err.println("Check that the card.dat file is in the right place.");
+            return; // On arrête la méthode ici pour éviter le crash
+        }
         int nbCard = 0;
         for (Player player : this.playerList) {
             player.resetRC();
             nbCard = player.getColumns() * player.getRaws();
             player.setHand(lib.drawSetUp(nbCard));
+            if(!this.isUiActive) {
+                Card card;
+                for (int i = 0; i < 2; i++) {
+                    do {
+                        card = player.chooseCardFromHand(true);
+                    } while (card.isVisible());
+                    card.reveal();
+                }
+            }
         }
         this.graveward.add(this.lib.drawRandomCard(true));
+
+        
     }
 
     /**
@@ -116,23 +127,25 @@ public class Skyjo extends Board {
      * @return no return value
      */
     protected void round() {
-    this.setUpRound();
+        this.setUpRound();
 
-    if (this.isUiActive) {
-        System.out.println("UI Mode: Initialization complete, switching to display.");
-        return; 
-    }
+        if (this.isUiActive) {
+            System.out.println("UI Mode: Initialization complete, switching to display.");
+            return; 
+        }
 
-    // The code below will ONLY run if you launch the game in text mode
-    Player playingPlayer;
-    int i = 0;
-    while (!this.isRoundFinish()) {
-        if (i >= this.getNumberOfPlayer()) i = 0;
-        playingPlayer = this.playerList.get(i);
-        this.playerTrun(playingPlayer); // C'est ça qui attend ton clavier !
-        i++;
+        // The code below will ONLY run if you launch the game in text mode
+        Player playingPlayer;
+        int i = 0;
+        while (!this.isRoundFinish()) {
+            if (i >= this.getNumberOfPlayer()) {
+                i = 0;
+            }
+            playingPlayer = this.playerList.get(i);
+            this.playerTrun(playingPlayer);
+            i++;
+        }
     }
-}
 
     /**
      * Starts and runs the full Skyjo game.
@@ -229,6 +242,10 @@ public class Skyjo extends Board {
         int[] coo;
         Card cardToReplace;
 
+        if(p.isHumain()){
+            p.drawConsolHand();
+        }    
+    
         choice = p.chooseBetweenTwo("Do you want to draw the top Card of : \n\t(0) : the library\n\t(1) : the graveward");
         if (choice == 0) {
             cardInPlay = this.lib.drawRandomCard(true);
