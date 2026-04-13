@@ -1,7 +1,6 @@
 package ui;
 
 import game.gamerule.*;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
