@@ -50,41 +50,23 @@ public class Library {
      * @return no return value
      */
     private void loadCard() {
-        int id_line = 0;
         while (this.reader.hasNextLine()) {
-            String line = reader.nextLine().trim();
-            
-            // We ignore the comment lines or empty ones
-            if (line.isEmpty() || line.startsWith("#")) {
-                id_line++;
-                continue;
+            String line = this.reader.nextLine();
+            String[] data = line.split(";");
+        
+            // structure of the card.dat file: number; value; name; color
+            int count = Integer.parseInt(data[0]);
+            int value = Integer.parseInt(data[1]);
+            String name = data[2];
+            String color = data[3];
+
+            // we add 'count' times the same card to the list
+            for (int i = 0; i < count; i++) {
+                // Utilisation du nouveau constructeur de Card
+                this.list.add(new Card(value, name, color));
             }
-
-            String[] parts = line.split(";");
-            
-            // file card.dat with 4 column (ex : 5;-2;Montavon;blue )
-            if(parts.length == 4){
-                try {
-                    int count = Integer.parseInt(parts[0]);
-                    int value = Integer.parseInt(parts[1]);
-                    String name = parts[2];
-                    String colorStr = parts[3];
-
-                    CardData profData = new CardData(value, name, colorStr);
-
-                    //create the number for each card (ex there are 5 cards -2)
-                    for (int i = 0; i < count; i++) {
-                        this.list.add(new Card(profData));
-                    }
-                } catch (NumberFormatException e) {
-                    System.err.println("Error parsing numbers on line " + id_line);
-                }
-            } else {
-                System.out.println("Line " + id_line + " skipped (wrong format)");
-            }
-            id_line++;
         }
-        this.reader.close(); // close reader 
+        this.reader.close();
     }
 
     /**

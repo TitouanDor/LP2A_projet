@@ -328,7 +328,7 @@ public class Skyjo extends Board {
             this.playerTrun(this.playerList.get(id_player));
             this.advanceToNextPlayer();
         }
-        // si c'est un humain l'UI attendra un clic (géré par les listeners)
+        // C'EST ICI qu'on ajouter la partie pour faire le deroulement des tours 
     }
 
     /**

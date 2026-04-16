@@ -8,46 +8,61 @@ import java.awt.*;
 
 public class GameWindow extends JFrame {
     private Board game;
+    private GamePanel gamePanel;
 
     public GameWindow(Skyjo game) {
         this.game = game;
         
-        // initialisation game window
+        // window initialisation
         setTitle("UTBM Skyjo - " + game.getClass().getSimpleName());
         setSize(1200, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
         getContentPane().setBackground(new Color(230, 230, 230));
 
-        // player grid 
-        JPanel playersPanel = new JPanel(new GridLayout(1, game.getNumberOfPlayer(), 20, 0));
-        playersPanel.setOpaque(false);
-        playersPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        this.gamePanel = new GamePanel();
+        add(gamePanel, BorderLayout.CENTER);
 
-        for (int i = 0; i < game.getNumberOfPlayer(); i++) {
-            Player p = game.getPlayer(i);
-            playersPanel.add(new PlayerBoardView(p));
-        }
-        add(playersPanel, BorderLayout.CENTER);
-
+        // south panal
         JPanel southPanel = new JPanel(new BorderLayout());
-        southPanel.setBackground(new Color(0, 85, 164));
+        southPanel.setBackground(new Color(0, 85, 164)); 
         southPanel.setPreferredSize(new Dimension(0, 50));
 
-        JLabel statusLabel = new JLabel("round of: " + game.getCurrentPlayer().toString(), SwingConstants.CENTER);
+        JLabel statusLabel = new JLabel("Turn of: " + game.getCurrentPlayer().toString(), SwingConstants.CENTER);
         statusLabel.setForeground(Color.WHITE);
         statusLabel.setFont(new Font("Arial", Font.BOLD, 16));
         
         southPanel.add(statusLabel, BorderLayout.CENTER);
         add(southPanel, BorderLayout.SOUTH);
 
-        // 3. ZONE SUPÉRIEURE : Pioche et Défausse (Placeholders pour le moment)
-        JPanel northPanel = new JPanel();
-        northPanel.add(new JLabel("Draw and Discard "));
-        add(northPanel, BorderLayout.NORTH);
-
-        // Centrer et afficher
+        // center and print 
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    /**
+     * Custom internal panel that manages the graphical rendering of the game. It delegates the drawing to the Board class.
+     */
+    private class GamePanel extends JPanel {
+        public GamePanel() {
+            setOpaque(false); 
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            // The centralized drawing method in Board.java is called
+            //She will draw the players, their cards, the drawing board, and the discard.
+            if (game != null) {
+                game.drawAllPlayersUI(g, getWidth(), getHeight());
+            }
+        }
+    }
+    
+    /**
+     * method to refresh the display after an action
+     */
+    public void refresh() {
+        repaint();
     }
 }

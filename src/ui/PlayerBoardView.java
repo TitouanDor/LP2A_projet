@@ -1,3 +1,4 @@
+/* VERIFIER QUE BOARD FONCTIONNE AVANT DE SUPPRIMER LE FICHIER
 package ui;
 
 import javax.swing.*;
@@ -41,3 +42,4 @@ public class PlayerBoardView extends JPanel {
         }
     }
 }
+*/

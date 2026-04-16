@@ -1,6 +1,7 @@
 package game;
 
 import java.util.ArrayList;
+import java.awt.*;
 
 /**
  * Represents the game board, including players, a library of cards,
@@ -128,6 +129,43 @@ public class Board {
             System.out.println(card.getValue());
         } else {
             System.out.println("None");
+        }
+    }
+    
+    // LOGIQUE UI AVEC TRANSFERT DE PLAYERBOARDVIEW (A VERIFIER AVANT SUPPRESSION DE PLAYERBOARDVIEW)
+
+    public void drawAllPlayersUI(Graphics g, int panelWidth, int panelHeight) {
+        int nbPlayers = playerList.size();
+        int spacing = 20;
+        int playerAreaWidth = (panelWidth - (spacing * (nbPlayers + 1))) / nbPlayers;
+
+        for (int i = 0; i < nbPlayers; i++) {
+            Player p = playerList.get(i);
+            int startX = spacing + i * (playerAreaWidth + spacing);
+            // we draw the board
+            p.drawHandUI(g, startX, 50, 80, 110);
+            drawCenterPilesUI(g, panelWidth / 2 - 40, panelHeight - 150);
+        }
+    }
+
+    /**
+     * Draw the pickaxe and the discard pile in the center of the screen
+     */
+    private void drawCenterPilesUI(Graphics g, int x, int y) {
+        // Drawing of the deck (face down card)
+        g.setColor(new Color(0, 85, 164)); // Blue UTBM
+        g.fillRoundRect(x - 100, y, 80, 110, 15, 15);
+        g.setColor(Color.WHITE);
+        g.drawString("DECK (" + lib.getCardNumber() + ")", x - 95, y + 60);
+
+        // Drawing the discard (Last graveward card)
+        if (!graveward.isEmpty()) {
+            Card topGrave = graveward.get(graveward.size() - 1);
+            topGrave.drawCardUI(g, x + 20, y, 80, 110);
+        } else {
+            g.setColor(Color.LIGHT_GRAY);
+            g.drawRoundRect(x + 20, y, 80, 110, 15, 15);
+            g.drawString("EMPTY", x + 40, y + 60);
         }
     }
 }

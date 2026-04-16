@@ -1,3 +1,5 @@
+/* ATTENTION NORMALEMENT CE FICHIER PEUT ETRE SUPPRIMME SI CARD.java EST OK 
+
 package ui;
 import javax.swing.*;
 import game.CardData;
@@ -63,3 +65,5 @@ public class CardView extends JPanel {
         }
     }
 }
+
+*/

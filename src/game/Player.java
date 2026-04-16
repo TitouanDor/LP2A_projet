@@ -2,6 +2,7 @@ package game;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+import java.awt.*;
 
 
 /**
@@ -212,6 +213,37 @@ public class Player {
                 }
             }
             System.out.println();
+        }
+    }
+
+
+    // LOGIQUE UI (VIENT DE PLAYERBOARDVIEW)
+    /**
+     * Draw the player’s hand for the graphical interface.
+     * * @param g The Graphics object
+     * @param x Starting position X of the player’s board
+     * @param y Starting position Y of the player's board
+     * @param cardWidth Crad Width
+     * @param cardHeight Card Height 
+     */
+    public void drawHandUI(Graphics g, int x, int y, int cardWidth, int cardHeight) {
+        int padding = 10; // space between card 
+        
+        // title 
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.BOLD, 14));
+        g.drawString("Board of " + this.name + (human ? " (You)" : " (AI)"), x, y - 10);
+
+        // draw gridboard 
+        for (int r = 0; r < this.raw; r++) {
+            for (int c = 0; c < this.column; c++) {
+                Card card = this.getCard(r, c);
+                if (card != null) {
+                    int cardX = x + c * (cardWidth + padding);
+                    int cardY = y + r * (cardHeight + padding);
+                    card.drawCardUI(g, cardX, cardY, cardWidth, cardHeight);
+                }
+            }
         }
     }
 

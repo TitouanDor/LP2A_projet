@@ -1,4 +1,8 @@
 package game;
+public class CardData { } //pour lancer le prog sans soucis 
+
+/* ATTENTION NORMALEMENT CE FICHIER PEUT ETRE SUPPRIMME SI CARD.java EST OK 
+package game;
 
 import java.awt.Color;
 
@@ -35,3 +39,4 @@ public class CardData {
         return color; 
     }
 }
+*/ 
