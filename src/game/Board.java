@@ -143,29 +143,91 @@ public class Board {
             Player p = playerList.get(i);
             int startX = spacing + i * (playerAreaWidth + spacing);
             // we draw the board
-            p.drawHandUI(g, startX, 50, 80, 110);
-            drawCenterPilesUI(g, panelWidth / 2 - 40, panelHeight - 150);
+            p.drawHandUI(g, startX, 50, 80, 110);  
+        }
+        drawCenterPilesUI(g, panelWidth / 2 , panelHeight - 150);
+
+        // 3. NOUVEAU : Dessin de la carte piochée
+    // On vérifie si l'instance actuelle est bien un Skyjo pour accéder à cardInHand
+    if (this instanceof game.gamerule.Skyjo) {
+        game.gamerule.Skyjo skyjoGame = (game.gamerule.Skyjo) this;
+        Card inHand = skyjoGame.getCardInHand();
+
+        if (inHand != null) {
+            int cardW = 80;
+            int cardH = 110;
+            // On la place au dessus des piles centrales (y - 150)
+            int handX = (panelWidth / 2) - (cardW / 2);
+            int handY = panelHeight - 320; 
+
+            // Small visual effect: a shadow or an outline to highlight it
+            g.setColor(new Color(0, 0, 0, 50));
+            g.fillRoundRect(handX + 4, handY + 4, cardW, cardH, 15, 15);
+
+            inHand.reveal(); 
+            inHand.drawCardUI(g, handX, handY, cardW, cardH);
+            }
         }
     }
 
     /**
      * Draw the pickaxe and the discard pile in the center of the screen
      */
-    private void drawCenterPilesUI(Graphics g, int x, int y) {
+    private void drawCenterPilesUI(Graphics g, int centerX , int y) {
         // Drawing of the deck (face down card)
-        g.setColor(new Color(0, 85, 164)); // Blue UTBM
-        g.fillRoundRect(x - 100, y, 80, 110, 15, 15);
+        int deckX = centerX - 100;
+        g.setColor(new Color(0, 85, 164)); 
+        g.fillRoundRect(deckX, y, 80, 110, 15, 15);
         g.setColor(Color.WHITE);
-        g.drawString("DECK (" + lib.getCardNumber() + ")", x - 95, y + 60);
+        g.drawString("DECK (" + lib.getCardNumber() + ")", deckX + 5, y + 60);
 
         // Drawing the discard (Last graveward card)
+        int graveX = centerX + 20;
         if (!graveward.isEmpty()) {
             Card topGrave = graveward.get(graveward.size() - 1);
-            topGrave.drawCardUI(g, x + 20, y, 80, 110);
+            topGrave.drawCardUI(g, graveX, y, 80, 110);
         } else {
             g.setColor(Color.LIGHT_GRAY);
-            g.drawRoundRect(x + 20, y, 80, 110, 15, 15);
-            g.drawString("EMPTY", x + 40, y + 60);
+            g.drawRoundRect(graveX, y, 80, 110, 15, 15);
+            g.drawString("EMPTY", graveX + 20, y + 60);
         }
+    }
+
+    /**
+    * Browse all the players to see if any of them received a click on a map.
+    */
+    public Object[] getClickedCardData(int mouseX, int mouseY, int panelWidth) {
+        int nbPlayers = playerList.size();
+        int spacing = 30;
+        int playerAreaWidth = (panelWidth - (spacing * (nbPlayers + 1))) / nbPlayers;
+
+        for (int i = 0; i < nbPlayers; i++) {
+            int startX = spacing + i * (playerAreaWidth + spacing);
+            int[] cardCoords = playerList.get(i).getCardAt(mouseX, mouseY, startX, 50, 80, 110);
+        
+            if (cardCoords != null) {
+                // we send back the player concerned and the map’s contact details
+                return new Object[]{ playerList.get(i), cardCoords[0], cardCoords[1] };
+            }
+        }
+        return null;
+    }
+
+    /**
+    * Check if the click is on the pickaxe (Deck)
+    */
+    public boolean isDeckClicked(int x, int y, int panelWidth, int panelHeight) {
+        int deckX = (panelWidth / 2) - 100; 
+        int deckY = panelHeight - 150;
+        return (x >= deckX && x <= deckX + 80 && y >= deckY && y <= deckY + 110);
+    }
+
+    /**
+    * Check if the click is on the discard (Grave)
+    */
+    public boolean isGraveClicked(int x, int y, int panelWidth, int panelHeight) {
+        int graveX = (panelWidth / 2) + 20; 
+        int graveY = panelHeight - 150;
+        return (x >= graveX && x <= graveX + 80 && y >= graveY && y <= graveY + 110);
     }
 }

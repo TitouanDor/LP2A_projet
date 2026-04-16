@@ -51,24 +51,27 @@ public class Library {
      */
     private void loadCard() {
         while (this.reader.hasNextLine()) {
-            String line = this.reader.nextLine();
-            String[] data = line.split(";");
-        
-            // structure of the card.dat file: number; value; name; color
-            int count = Integer.parseInt(data[0]);
-            int value = Integer.parseInt(data[1]);
-            String name = data[2];
-            String color = data[3];
+            String line = this.reader.nextLine().trim(); 
 
-            // we add 'count' times the same card to the list
-            for (int i = 0; i < count; i++) {
-                // Utilisation du nouveau constructeur de Card
-                this.list.add(new Card(value, name, color));
+            if (line.startsWith("#") || line.isEmpty()) {
+                continue; 
+            }
+            String[] data = line.split(";");
+            try {
+                int count = Integer.parseInt(data[0]);
+                int value = Integer.parseInt(data[1]);
+                String name = data[2];
+                String color = data[3];
+
+                for (int i = 0; i < count; i++) {
+                    this.list.add(new Card(value, name, color));
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("Erreur de formatage sur la ligne : " + line);
             }
         }
         this.reader.close();
     }
-
     /**
      * Displays all cards currently in the library.
      * 

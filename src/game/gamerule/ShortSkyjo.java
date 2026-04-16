@@ -50,7 +50,6 @@ public class ShortSkyjo extends Skyjo {
 
     /* PAREIL EST CE QUE TU PEUX REGARDER AUSSI ET VOIR SI C'EST UTILE 
     */
-    @Override
     public boolean isGameOver() {
         for (Player p : playerList) {
             boolean allVisible = true;

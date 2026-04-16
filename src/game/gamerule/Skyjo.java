@@ -3,6 +3,7 @@ package game.gamerule;
 import game.Board;
 import game.Card;
 import game.Player;
+import game.gamerule.Skyjo.GameStep;
 
 /**
  * Implementation of the Skyjo variant built on top of the generic Board.
@@ -25,6 +26,20 @@ public class Skyjo extends Board {
     /** ID of the player who first reveals all cards in the current round. */
     protected int id_finisher;
 
+    /*
+     * we add an enumeration to know where we are in the turn, 
+     * and a variable to store the card that the player has just drawn.
+     */
+    public enum GameStep {
+        START_TURN,       // Waiting for a draw (Deck or Grave)
+        CARD_PICKED,      // The player has a card "in hand," is waiting to choose a place on his board.
+        WAITING_FOR_REVEAL,    //Waits for the player to return a card 
+        GAME_OVER,
+    }
+
+    private GameStep currentStep = GameStep.START_TURN;
+    private Card cardInHand = null; // The temporarily drawn card
+
     /**
      * Default constructor for a Skyjo game.
      * Creates a 2‑player game with standard hand size (3×4) and initializes the score list.
@@ -46,6 +61,7 @@ public class Skyjo extends Board {
         super(listOfHuman.length, line, column, listOfHuman);
         this.scoreList = new int[this.getNumberOfPlayer()];
     }
+
 
     /**
      * Sets up a new round:
@@ -116,7 +132,7 @@ public class Skyjo extends Board {
     }
 
     protected void drawBoardUi() {
-        System.out.println("Mise à jour de l'interface graphique...");
+        System.out.println("Updating the GUI...");
     }
 
     /**
@@ -282,26 +298,33 @@ public class Skyjo extends Board {
      * @param p the player whose hand is being updated
      */
     protected void updatePlayerHand(Player p) {
-        boolean hasColumn;
-        Card ref;
-        Card card;
         for (int c = 0; c < p.getColumns(); c++) {
-            hasColumn = true;
-            ref = p.getCard(0, c);
+            boolean isComplete = true;
+            Card firstCard = p.getCard(0, c);
+        
+            if (firstCard == null) continue; 
+
             for (int l = 0; l < p.getRaws(); l++) {
-                card = p.getCard(l, c);
-                if (!card.isVisible()) {
-                    hasColumn = false;
-                } else if (ref.getValue() != card.getValue()) {
-                    hasColumn = false;
+                Card currentCard = p.getCard(l, c);
+            
+                if (currentCard == null || !currentCard.isVisible() || 
+                    currentCard.getValue() != firstCard.getValue()) {
+                    isComplete = false;
+                    break;
                 }
             }
-            if (hasColumn) {
-                p.hasColumn(c);
+
+        if (isComplete) {
+            // ACTION: We empty the column in the data
+            for (int l = 0; l < p.getRaws(); l++) {
+                Card toDiscard = p.getCard(l, c);
+                this.graveward.add(toDiscard); // Adding to the discard pile
+                p.setCard(l, c, null);         
             }
+            System.out.println("Column " + c + " dropped " + p.toString());
         }
     }
-
+}
     /**
      * Prints the current score list for all players to the console.
      * 
@@ -318,31 +341,103 @@ public class Skyjo extends Board {
         }
     }
 
+    // -------VERSION UI---------//
+    
+    
     /**
     * version UI de la boucle de jeu. 
     * JE TE LAISSE REGARDER SI CA TE VA
+    
+    
     */
-    public void nextTurnUI() {
-        // logique pour faire jouer l'ia si c'est son tour
-        if (!this.playerList.get(id_player).isHumain()) {
-            this.playerTrun(this.playerList.get(id_player));
-            this.advanceToNextPlayer();
-        }
-        // C'EST ICI qu'on ajouter la partie pour faire le deroulement des tours 
-    }
-
     /**
-    * Vérifie si la partie doit s'arrêter selon les règles standards
-    * je sais pas si utile ou à alors on peut utiliser la méthode que t'avais déjà fait avant 
-    */
-    public boolean isGameOver() {
-        for (int score : scoreList) {
-            if (score >= 100) return true;
+     * Manages the actions of the human player via the UI.
+     */
+    public void handleAction(int row, int col, boolean isDeck, boolean isGrave) {
+        if (currentStep == GameStep.GAME_OVER) return;
+
+        switch (currentStep) {
+            case START_TURN:
+                if (isDeck) {
+                    cardInHand = this.lib.drawRandomCard(true); 
+                    currentStep = GameStep.CARD_PICKED;
+                    System.out.println("Drawn from the deck : " + cardInHand.getValue());
+                } else if (isGrave && !graveward.isEmpty()) {
+                    cardInHand = this.graveward.remove(this.graveward.size() - 1);
+                    currentStep = GameStep.CARD_PICKED;
+                    System.out.println("Draw from the discard pile : " + cardInHand.getValue());
+                }
+                break;
+
+            case CARD_PICKED:
+            if (isGrave) {
+                // the player doesn’t want the drawn card 
+                this.graveward.add(cardInHand); // go in the discard 
+                cardInHand = null;
+                currentStep = GameStep.WAITING_FOR_REVEAL;
+                System.out.println("Card rejected ! Choose a card to reveal.");
+            } else if (row != -1 && col != -1) {
+                // classic excahnge 
+                Player p = this.getCurrentPlayer();
+                Card oldCard = p.exchangeCard(cardInHand, row, col);
+                this.graveward.add(oldCard);
+                cardInHand = null;
+                advanceTurn();
+            }
+            break;
+
+        case WAITING_FOR_REVEAL:
+            if (row != -1 && col != -1) {
+                Player p = this.getCurrentPlayer();
+                Card toReveal = p.getCard(row, col);
+                if (!toReveal.isVisible()) {
+                    toReveal.reveal();
+                    advanceTurn();
+                }
+            }
+            break;
+    }
+}
+
+    private void advanceTurn() {
+        // check if it is the end of the game 
+        if (this.isRoundFinish()) {
+            this.updateScore();
+            if (this.isGameFinish()) {
+                this.currentStep = GameStep.GAME_OVER;
+                this.endGame();
+            } else {
+                this.setUpRound(); // new round 
+                this.currentStep = GameStep.START_TURN;
+            }
+        } else {
+            // next player
+            this.id_player = (this.id_player + 1) % this.getNumberOfPlayer();
+            this.currentStep = GameStep.START_TURN;
+
+            // If it’s an AI, you automate your turn.
+            if (!this.getCurrentPlayer().isHumain()) {
+                playAiTurn();
+            }
         }
-        return false;
     }
 
-    private void advanceToNextPlayer() {
-        this.id_player = (this.id_player + 1) % this.getNumberOfPlayer();
+    /** Squelette pour l'IA (à remplir plus tard) */
+    private void playAiTurn() {
+        System.out.println("AI thinking...");
+        // SIMULATION D'UN TOUR SIMPLE (SI TU PEUX RECUP TA PARTIE LOGIQUE IA )
+        Player p = getCurrentPlayer();
+        Card c = this.lib.drawRandomCard(true);
+        this.graveward.add(p.exchangeCard(c, 0, 0)); 
+        advanceTurn();
     }
+
+    //getter for UI part 
+    public GameStep getStep() { 
+        return this.currentStep; 
+    }
+    public Card getCardInHand() {
+        return this.cardInHand; 
+    }
+
 }
