@@ -317,4 +317,32 @@ public class Skyjo extends Board {
             System.out.println("\tPlayer " + p + "(" + i + ") : " + score);
         }
     }
+
+    /**
+    * version UI de la boucle de jeu. 
+    * JE TE LAISSE REGARDER SI CA TE VA
+    */
+    public void nextTurnUI() {
+        // logique pour faire jouer l'ia si c'est son tour
+        if (!this.playerList.get(id_player).isHumain()) {
+            this.playerTrun(this.playerList.get(id_player));
+            this.advanceToNextPlayer();
+        }
+        // si c'est un humain l'UI attendra un clic (géré par les listeners)
+    }
+
+    /**
+    * Vérifie si la partie doit s'arrêter selon les règles standards
+    * je sais pas si utile ou à alors on peut utiliser la méthode que t'avais déjà fait avant 
+    */
+    public boolean isGameOver() {
+        for (int score : scoreList) {
+            if (score >= 100) return true;
+        }
+        return false;
+    }
+
+    private void advanceToNextPlayer() {
+        this.id_player = (this.id_player + 1) % this.getNumberOfPlayer();
+    }
 }

@@ -1,12 +1,13 @@
 package ui;
 
+import game.Board;
 import game.Player;
 import game.gamerule.Skyjo;
 import javax.swing.*;
 import java.awt.*;
 
 public class GameWindow extends JFrame {
-    private Skyjo game;
+    private Board game;
 
     public GameWindow(Skyjo game) {
         this.game = game;

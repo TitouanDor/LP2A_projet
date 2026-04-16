@@ -15,8 +15,8 @@ public class CardData {
 
     private Color parseColor(String colorStr) {
         switch (colorStr.toLowerCase()) {
-            case "blue":   return new Color(41, 192, 240);
-            case "aqua":   return new Color(10, 12, 163);
+            case "blue":   return new Color(54, 154, 194);
+            case "aqua":   return new Color(39, 235, 245);
             case "green":  return new Color(38, 189, 45);
             case "yellow": return new Color(213, 230, 46);
             case "red":    return new Color(214, 38, 11);

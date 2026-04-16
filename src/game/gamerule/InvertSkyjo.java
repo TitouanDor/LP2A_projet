@@ -69,4 +69,10 @@ public class InvertSkyjo extends Skyjo {
             this.scoreList[i] += tempScore[i];
         }
     }
+
+    // PAREIL EST CE QUE TU PEUX REGARDER 
+    public void endRoundUI() {
+        this.updateScore(); 
+        // plus tard ajouter ici un appel vers l'UI pour afficher les scores et proposer le round suivant.
+    }
 }
