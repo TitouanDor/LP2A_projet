@@ -75,6 +75,15 @@ public class Player {
     }
 
     /**
+     * Set the player's name.
+     * 
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
      * Reset column and raw
      * 
      * @return no return value
@@ -246,7 +255,7 @@ public class Player {
         // title 
         g.setColor(Color.BLACK);
         g.setFont(new Font("Arial", Font.BOLD, 14));
-        g.drawString("Board of " + this.name + (human ? " (You)" : " (AI)"), x, y - 10);
+        g.drawString("Board of " + this.name + (human ? " (You)" : " (AI)") + " Hand Value : " + this.getHandValue(), x, y - 10);
 
         // draw gridboard 
         for (int r = 0; r < this.raw; r++) {

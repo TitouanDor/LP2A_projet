@@ -42,6 +42,9 @@ public class Board {
         this.graveward = new ArrayList<Card>();
         this.lib = new Library();
         this.isUiActive = true;
+        for (Player p : playerList) {
+            p.setName("Player " + (playerList.indexOf(p) + 1));
+        }
     }
 
     // À ajouter dans Board.java
@@ -65,6 +68,7 @@ public class Board {
         this.playerList = new ArrayList<Player>(this.numberOfPlayer);
         for (int i = 0; i < this.numberOfPlayer; i++) {
             this.playerList.add(new Player(listOfHuman[i], line, column));
+            this.playerList.get(i).setName("Player " + (i + 1));
         }
         this.graveward = new ArrayList<Card>();
         this.lib = new Library();

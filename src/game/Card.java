@@ -133,6 +133,7 @@ public class Card {
 
     // LOGIQUE UI AVEC LES IDEES DE CARDVIEW (A VERIFIER AVANT SUPPRESSION DE CARDVIEW)
     public void drawCardUI(Graphics g, int x, int y, int width, int height) {
+        int PIXELS_PER_CHARACTER = 10; // Approximate width of each character in pixels
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -154,7 +155,7 @@ public class Card {
             g2.setColor(new Color(0, 85, 164)); // Blue UTBM
             g2.fillRoundRect(x, y, width, height, 15, 15);
             g2.setColor(Color.WHITE);
-            g2.drawString("?", x + width/2 - 5, y + height/2 + 5);
+            g2.drawString("UTBM", x + width/2 - PIXELS_PER_CHARACTER*2, y + height/2 + PIXELS_PER_CHARACTER/2);
         }
     }
 }

@@ -3,7 +3,6 @@ package ui;
 import game.Board;
 import game.Player;
 import game.gamerule.Skyjo;
-import game.gamerule.Skyjo.GameStep;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,18 +23,18 @@ public class GameWindow extends JFrame {
         getContentPane().setBackground(new Color(230, 230, 230));
 
         this.gamePanel = new GamePanel();
-        add(gamePanel, BorderLayout.CENTER);
+        add(this.gamePanel, BorderLayout.CENTER);
 
         // south panal
         JPanel southPanel = new JPanel(new BorderLayout());
         southPanel.setBackground(new Color(0, 85, 164)); 
         southPanel.setPreferredSize(new Dimension(0, 50));
 
-        statusLabel = new JLabel("Turn of: " + game.getCurrentPlayer().toString(), SwingConstants.CENTER);
-        statusLabel.setForeground(Color.WHITE);
-        statusLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        this.statusLabel = new JLabel("Turn of: " + game.getCurrentPlayer().toString(), SwingConstants.CENTER);
+        this.statusLabel.setForeground(Color.WHITE);
+        this.statusLabel.setFont(new Font("Arial", Font.BOLD, 16));
         
-        southPanel.add(statusLabel, BorderLayout.CENTER);
+        southPanel.add(this.statusLabel, BorderLayout.CENTER);
         add(southPanel, BorderLayout.SOUTH);
 
         // center and print 
