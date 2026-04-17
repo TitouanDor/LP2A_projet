@@ -3,11 +3,17 @@ import ui.MenuController;
 import ui.MenuWindow;
 
 
+<<<<<<< HEAD
 /**
  * The entry point of the UTBM Skyjo application.
  * This class handles the initial startup logic, allowing the game to run 
  * either in command-line console mode or with a Graphical User Interface (GUI).
  */
+=======
+import game.Bot;
+import game.Card;
+
+>>>>>>> c23d994 (add Bot.java)
 public class Main {
     /**
      * Main method that launches the game.
@@ -30,6 +36,24 @@ public class Main {
             menu.setMenuListener(controller);
             System.out.println("launch with the GUI interface ");
         }
+
+        /*Card [][] hand = {
+            {new Card(1, "1", "blue"), new Card(2,"2", "blue"), new Card(3, "3", "blue"), new Card(4, "4", "blue")},
+            {new Card(9, "9", "blue"), new Card(6, "6", "blue"), new Card(7, "7", "blue"), new Card(4, "4", "blue")},
+            {new Card(9, "9", "blue"), new Card(2, "2", "blue"), new Card(11, "11", "blue"), new Card(12, "12", "blue")}
+        };
+
+        Bot bot = new Bot(hand.length, hand[0].length, 0);
+        bot.setHand(hand);
+
+        bot.revealCard(2, 0);
+        bot.revealCard(1, 0);
+        bot.revealCard(0,1);
+        bot.revealCard(1,1);
+        bot.revealCard(0,3);
+        bot.revealCard(1,3);
+        bot.drawConsolHand();
+        System.out.println(bot.test());*/
         
     }
 }
