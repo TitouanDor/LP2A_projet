@@ -69,10 +69,19 @@ public class InvertSkyjo extends Skyjo {
             this.scoreList[i] += tempScore[i];
         }
     }
-
-    // PAREIL EST CE QUE TU PEUX REGARDER 
-    public void endRoundUI() {
-        this.updateScore(); 
-        // plus tard ajouter ici un appel vers l'UI pour afficher les scores et proposer le round suivant.
+ 
+    @Override
+    /**
+     * Checks if the game is finished by verifying if any player's score has reached or exceeded 500 points.
+     * 
+      * @return true if the game is finished, false otherwise
+     */
+    protected boolean isGameFinish() {
+        for (int score : this.scoreList) {
+            if (score >= 500) {
+                return true;
+            }
+        }
+        return false;
     }
 }
