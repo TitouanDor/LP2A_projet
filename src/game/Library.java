@@ -50,32 +50,28 @@ public class Library {
      * @return no return value
      */
     private void loadCard() {
-        int numberOfPart = 0;
-        int id_line = 0;
-        String [] parts;
         while (this.reader.hasNextLine()) {
-            String line = reader.nextLine();
-            System.out.println(line);
-            if (!line.startsWith("#")) {
-                parts = line.split(";");
-                if(parts.length == numberOfPart){
-                    int number = Integer.parseInt(parts[0]);
-                    for (int i = 0; i < number; i++) {
-                        int value = Integer.parseInt(parts[1]);
-                        this.list.add(new Card(value, parts[2], parts[3]));
-                    }
-                } else {
-                    System.out.println("Line " + id_line + " skipped");
-                }
-                
-            } else {
-                parts = line.split(";");
-                numberOfPart = parts.length;
-            }
-            id_line ++;
-        }
-    }
+            String line = this.reader.nextLine().trim(); 
 
+            if (line.startsWith("#") || line.isEmpty()) {
+                continue; 
+            }
+            String[] data = line.split(";");
+            try {
+                int count = Integer.parseInt(data[0]);
+                int value = Integer.parseInt(data[1]);
+                String name = data[2];
+                String color = data[3];
+
+                for (int i = 0; i < count; i++) {
+                    this.list.add(new Card(value, name, color));
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("Erreur de formatage sur la ligne : " + line);
+            }
+        }
+        this.reader.close();
+    }
     /**
      * Displays all cards currently in the library.
      * 
@@ -141,5 +137,19 @@ public class Library {
             list.add(this.drawRandomCard(false));
         }
         return list;
+    }
+
+    /**
+     * Resets the library to its initial state by reloading all cards from the data file.
+     * This is useful at the start of each new round to ensure the library is full again
+     */
+    public void reset() {
+        this.list.clear();
+        try {
+            this.reader = new Scanner(new FileInputStream("./../card.dat"));
+            loadCard();
+        } catch (FileNotFoundException e) {
+            System.err.println("Couldn't find the file card.dat: " + e.getMessage());
+        }
     }
 }

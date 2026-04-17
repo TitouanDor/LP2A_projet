@@ -2,6 +2,10 @@ package game;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+
 
 
 /**
@@ -44,6 +48,8 @@ public class Player {
      */
     public Player() {
         this.human = false;
+        this.raw = 4;
+        this.column = 3; 
         this.maxRaw = 4;
         this.maxColumn = 3;
         this.hand = new ArrayList<Card>(this.raw * this.column);
@@ -61,12 +67,23 @@ public class Player {
      */
     public Player(boolean human, int raw, int column) {
         this.human = human;
+        this.raw = raw;
+        this.column = column;
         this.maxRaw = raw;
         this.maxColumn = column;
         this.hand = new ArrayList<Card>(this.raw * this.column);
         this.rdm = new Random();
         this.scanner = new Scanner(System.in);
         this.name = "Default_name";
+    }
+
+    /**
+     * Set the player's name.
+     * 
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -97,6 +114,10 @@ public class Player {
         return this.column;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     /**
      * Can reveal a card from player's hand
      * 
@@ -107,7 +128,11 @@ public class Player {
      */
     public void revealCard(int raw, int column){
         Card card = this.hand.get(raw*this.getColumns()+column);
-        card.reveal();
+        if(card != null){
+            card.reveal();
+        } else {
+            System.err.println("CRITICAL ERROR: Null card found in player's hand during revealCard.");
+        }
     }
 
     /**
@@ -167,9 +192,12 @@ public class Player {
     /**
      * @return (boolean) return true if all the player hand's card are revealed else false
      */
-    public boolean isHandRevealed(){
+    public boolean isHandRevealed() {
         for (Card card : hand) {
-            if (!card.isVisible()){
+            if(card == null){
+                continue; // skip null cards, they are considered as revealed (empty slot)
+            }
+            if (!card.isVisible()) {
                 return false;
             }
         }
@@ -181,10 +209,10 @@ public class Player {
      * 
      * @return (int) hand's value
      */
-    public int getHandValue(){
+    public int getHandValue() {
         int score = 0;
         for (Card card : hand) {
-            if(card.isVisible()){
+            if (card != null && card.isVisible()) { // Ajout du card != null
                 score += card.getValue();
             }
         }
@@ -201,7 +229,9 @@ public class Player {
         for(int i = 0;i<this.getRaws();i++){
             for(int j=0;j<this.getColumns();j++){
                 card = this.getCard(i, j);
-                if (card.isVisible()){
+                if (card == null) {
+                    System.out.print("  ;"); // Affiche du vide pour une colonne supprimée
+                } else if (card.isVisible()) {
                     System.out.print(card.getValue() + ";");
                 } else {
                     System.out.print("#;");
@@ -211,14 +241,72 @@ public class Player {
         }
     }
 
+
+    // UI Logic
+
+    public void setCard(int r, int c, Card card) {
+        if (r < this.raw && c < this.column) {
+            this.hand.set(r * this.column + c, card);
+        }
+    }
+
+
+    /**
+     * Draw the player’s hand for the graphical interface.
+     * * @param g The Graphics object
+     * @param x Starting position X of the player’s board
+     * @param y Starting position Y of the player's board
+     * @param cardWidth Crad Width
+     * @param cardHeight Card Height 
+     * @param score Player's current score to display on the board
+     */
+    public void drawHandUI(Graphics g, int x, int y, int cardWidth, int cardHeight, int score) {
+        int padding = 10; // space between card 
+        
+        // title 
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.BOLD, 14));
+        g.drawString("Board of " + this.name + (human ? " (You)" : " (AI)") + " Hand Value : " + this.getHandValue() + " Score : " + score, x, y - 10);
+
+        // draw gridboard 
+        for (int r = 0; r < this.raw; r++) {
+            for (int c = 0; c < this.column; c++) {
+                Card card = this.getCard(r, c);
+                if (card != null) {
+                    int cardX = x + c * (cardWidth + padding);
+                    int cardY = y + r * (cardHeight + padding);
+                    card.drawCardUI(g, cardX, cardY, cardWidth, cardHeight);
+                }
+            }
+        }
+    }
+
     /**
      * Allow to reveal all the card form the player's hand
      * 
      * @return no return value
      */
     public void revealHand(){
+        if(this.isHandRevealed()){
+            return;
+        } 
+
+        if(this.hand == null){
+            System.err.println("CRITICAL ERROR: Null hand found for player during revealHand.");
+            return;
+        }
+
+        if(this.hand.size() == 0){
+            System.err.println("CRITICAL ERROR: Hand size 0.");
+            return;
+        }
+
         for (Card card : this.hand) {
-            card.reveal();
+            if(card != null){
+                card.reveal();
+            } else {
+                System.err.println("CRITICAL ERROR: Null card found in player's hand during revealHand.");
+            }
         }
     }
 
@@ -262,6 +350,26 @@ public class Player {
             coo[1] = rdm.nextInt(this.getColumns());
         }
         return coo;
+    }
+
+    /**
+    * Check if a mouse click (mouseX, mouseY) lands on one of the player’s cards.
+    * @return an array {row, column} if a card is hit, otherwise null.
+     */
+    public int[] getCardAt(int mouseX, int mouseY, int startX, int startY, int cardWidth, int cardHeight) {
+        int padding = 10;
+        for (int r = 0; r < this.raw; r++) {
+            for (int c = 0; c < this.column; c++) {
+                int cardX = startX + c * (cardWidth + padding);
+                int cardY = startY + r * (cardHeight + padding);
+
+                // check if the click is in the rectangle of the card
+                if (mouseX >= cardX && mouseX <= cardX + cardWidth && mouseY >= cardY && mouseY <= cardY + cardHeight) {
+                    return new int[]{r, c};
+                }
+            }
+        }
+        return null; // no clicked card
     }
 
     /**

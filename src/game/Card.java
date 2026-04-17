@@ -1,5 +1,13 @@
 package game;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.FontMetrics;
+
+
 /**
  * Represents a single card used in the game.
  * Each card has a name, a numeric value, and a visibility state
@@ -17,31 +25,29 @@ public class Card {
     private boolean visible;
 
     /** The color of the card for the UI */
-    private String color;
+    private Color color;
 
     /**
      * Default constructor.
      */
     public Card() {
         this.value = 0;
-        this.name = "Default_name";
+        this.name = "empty";
         this.visible = false;
-        this.color = "blue";
+        this.color = Color.GRAY;
     }
 
     /**
-     * Constructs a card with the specified value and name.
-     * The card is hidden by default.
-     *
-     * @param value the card's numerical value
-     * @param name  the name or label of the card
-     * @param color the name of the card's color
+     * Main constructor used by Library.java.
+     * @param value The numeric value
+     * @param name The professor or card name
+     * @param colorStr The color name from the data file
      */
-    public Card(int value, String name, String color) {
+    public Card(int value, String name, String colorStr) {
         this.value = value;
         this.name = name;
         this.visible = false;
-        this.color = color;
+        this.color = parseColor(colorStr);
     }
 
     /**
@@ -82,6 +88,14 @@ public class Card {
         this.visible = true;
     }
 
+    /** A SUPPRIMER QUAND ON SUPPRIMERA CARRDDATA
+     * Getter to access the full data (useful for CardView)
+    
+    public CardData getData() {
+        return this.data;
+    }
+    */
+
     /**
      * Returns a string representation of the card,
      * including its name, value, and visibility state.
@@ -106,7 +120,62 @@ public class Card {
      * 
      * @return color's name
      */
-    public String getColor(){
+    public Color getColor(){
         return this.color;
+    }
+
+    /**
+     * Parses a color name string and returns the corresponding Color object.
+     *
+     * @param colorStr the name of the color (e.g., "blue", "red")
+     * 
+     * @return the Color object corresponding to the given color name, or gray if unknown
+     */
+    private Color parseColor(String colorStr) {
+        switch (colorStr.toLowerCase()) {
+            case "blue":   return new Color(54, 154, 194);
+            case "aqua":   return new Color(39, 235, 245);
+            case "green":  return new Color(38, 189, 45);
+            case "yellow": return new Color(213, 230, 46);
+            case "red":    return new Color(214, 38, 11);
+            default:       return Color.GRAY;
+        }
+    }
+
+    /**
+     * Draws the card on the screen at the specified position and size.
+     * 
+     * @param g the Graphics object used for drawing
+     * @param x the x-coordinate of the top-left corner where the card should be drawn
+     * @param y the y-coordinate of the top-left corner where the card should be drawn
+     * @param width the width of the card to be drawn
+     * @param height the height of the card to be drawn
+     */
+    public void drawCardUI(Graphics g, int x, int y, int width, int height) {
+        int PIXELS_PER_CHARACTER = 10; // Approximate width of each character in pixels
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        if (visible) {
+            // Face up 
+            g2.setColor(this.color);
+            g2.fillRoundRect(x, y, width, height, 15, 15);
+            
+            g2.setColor(Color.BLACK);
+            g2.setFont(new Font("Arial", Font.BOLD, 16));
+            g2.drawString(String.valueOf(value), x + 10, y + 25);
+            
+            g2.setFont(new Font("Arial", Font.BOLD, 12));
+            FontMetrics fm = g2.getFontMetrics();
+            int textX = x + (width - fm.stringWidth(name)) / 2;
+            g2.drawString(name, textX, y + height / 2);
+        } else {
+            // Face down (UTBM style)
+            String utbmText = "UTBM";
+            g2.setColor(new Color(0, 85, 164)); // Blue UTBM
+            g2.fillRoundRect(x, y, width, height, 15, 15);
+            g2.setColor(Color.WHITE);
+            g2.drawString(utbmText, x + width/2 - PIXELS_PER_CHARACTER*utbmText.length()/2, y + height/2 + PIXELS_PER_CHARACTER/2);
+        }
     }
 }

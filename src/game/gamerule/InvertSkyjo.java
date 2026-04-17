@@ -69,4 +69,19 @@ public class InvertSkyjo extends Skyjo {
             this.scoreList[i] += tempScore[i];
         }
     }
+ 
+    @Override
+    /**
+     * Checks if the game is finished by verifying if any player's score has reached or exceeded 500 points.
+     * 
+      * @return true if the game is finished, false otherwise
+     */
+    protected boolean isGameFinish() {
+        for (int score : this.scoreList) {
+            if (score >= 500) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -19,11 +19,14 @@ import game.Player;
  */
 public class Skyjo extends Board {
 
-    /** Score list indexed by player ID; scores accumulate over rounds. */
-    protected int[] scoreList;
-
     /** ID of the player who first reveals all cards in the current round. */
     protected int id_finisher;
+
+    /** State variable to track the current step of the turn */
+    protected GameStep currentStep = GameStep.START_TURN;
+
+    /** Temporary variable to hold the card that the player has just drawn. */
+    protected Card cardInHand = null;
 
     /**
      * Default constructor for a Skyjo game.
@@ -47,6 +50,7 @@ public class Skyjo extends Board {
         this.scoreList = new int[this.getNumberOfPlayer()];
     }
 
+
     /**
      * Sets up a new round:
      * - Deals a full hand to each player.
@@ -55,21 +59,32 @@ public class Skyjo extends Board {
      * 
      * @return no return value
      */
-    protected void setUpRound() {
+    public void setUpRound() {
+        //security 
+        if (this.lib == null || this.lib.getCardNumber() == 0) {
+            System.err.println("CRITICAL ERROR: The library is empty or not loaded");
+            System.err.println("Check that the card.dat file is in the right place.");
+            return; // Stop here to prevent further errors when trying to draw cards
+        }
         int nbCard = 0;
+        this.lib.reset(); // Reset the library to its initial state at the start of each round
         for (Player player : this.playerList) {
             player.resetRC();
             nbCard = player.getColumns() * player.getRaws();
             player.setHand(lib.drawSetUp(nbCard));
-            Card card;
-            for (int i = 0; i < 2; i++) {
-                do {
-                    card = player.chooseCardFromHand(true);
-                } while (card.isVisible());
-                card.reveal();
+            if(!this.isUiActive) {
+                Card card;
+                for (int i = 0; i < 2; i++) {
+                    do {
+                        card = player.chooseCardFromHand(true);
+                    } while (card.isVisible());
+                    card.reveal();
+                }
             }
         }
         this.graveward.add(this.lib.drawRandomCard(true));
+
+        
     }
 
     /**
@@ -114,6 +129,13 @@ public class Skyjo extends Board {
      */
     protected void round() {
         this.setUpRound();
+
+        if (this.isUiActive) {
+            System.out.println("UI Mode: Initialization complete, switching to display.");
+            return; 
+        }
+
+        // The code below will ONLY run if you launch the game in text mode
         Player playingPlayer;
         int i = 0;
         while (!this.isRoundFinish()) {
@@ -121,13 +143,6 @@ public class Skyjo extends Board {
                 i = 0;
             }
             playingPlayer = this.playerList.get(i);
-            if (this.isUiActive) {
-                this.drawBoardUi();
-            } else if (playingPlayer.isHumain()) {
-                System.out.println("Player : " + i + " your turn !!");
-                this.drawBoardWithoutUi();
-                playingPlayer.drawConsolHand();
-            }
             this.playerTrun(playingPlayer);
             i++;
         }
@@ -182,7 +197,7 @@ public class Skyjo extends Board {
         }
 
         if (scoreMinWithoutWinner <= tempScore[id_finisher] && tempScore[id_finisher] > 0) {
-            System.out.println("Play better, your score is multiplied by 2");
+            System.out.println("Play better, your score is multiplied by 2" + " (finisher score : " + tempScore[id_finisher] + " vs min score without winner : " + scoreMinWithoutWinner + ")");
             tempScore[id_finisher] *= 2;
         }
 
@@ -228,6 +243,11 @@ public class Skyjo extends Board {
         int[] coo;
         Card cardToReplace;
 
+        if(p.isHumain()){
+            p.drawConsolHand();
+            this.drawBoardWithoutUi();
+        }    
+    
         choice = p.chooseBetweenTwo("Do you want to draw the top Card of : \n\t(0) : the library\n\t(1) : the graveward");
         if (choice == 0) {
             cardInPlay = this.lib.drawRandomCard(true);
@@ -264,22 +284,33 @@ public class Skyjo extends Board {
      * @param p the player whose hand is being updated
      */
     protected void updatePlayerHand(Player p) {
-        boolean hasColumn;
-        Card ref;
-        Card card;
+        boolean isComplete;
+        Card firstCard;
+        Card currentCard;
         for (int c = 0; c < p.getColumns(); c++) {
-            hasColumn = true;
-            ref = p.getCard(0, c);
+            isComplete = true;
+            firstCard = p.getCard(0, c);
+        
+            if (firstCard == null) continue; 
+
             for (int l = 0; l < p.getRaws(); l++) {
-                card = p.getCard(l, c);
-                if (!card.isVisible()) {
-                    hasColumn = false;
-                } else if (ref.getValue() != card.getValue()) {
-                    hasColumn = false;
+                currentCard = p.getCard(l, c);
+            
+                if (currentCard == null || !currentCard.isVisible() || currentCard.getValue() != firstCard.getValue()) {
+                    isComplete = false;
+                    break;
                 }
             }
-            if (hasColumn) {
-                p.hasColumn(c);
+
+            if (isComplete) {
+                Card toDiscard;
+                // ACTION: We empty the column in the data
+                for (int l = 0; l < p.getRaws(); l++) {
+                    toDiscard = p.getCard(l, c);
+                    this.graveward.add(toDiscard); // Adding to the discard pile
+                    p.setCard(l, c, null);         
+                }
+                System.out.println("Column " + c + " dropped " + p.toString());
             }
         }
     }
@@ -299,4 +330,123 @@ public class Skyjo extends Board {
             System.out.println("\tPlayer " + p + "(" + i + ") : " + score);
         }
     }
+
+    // -------VERSION UI---------//
+
+    /**
+     * Manages the actions of the human player via the UI.
+     * 
+     * @param row the row index of the clicked card on the player's hand grid
+     * @param col the column index of the clicked card on the player's hand grid
+     * @param isDeck true if the player clicked on the deck, false otherwise
+     * @param isGrave true if the player clicked on the graveyard, false otherwise
+     */
+    public void handleAction(int row, int col, boolean isDeck, boolean isGrave) {
+        if (this.currentStep == GameStep.GAME_OVER) return;
+
+        switch (this.currentStep) {
+            case START_TURN:
+                if (isDeck) {
+                    this.cardInHand = this.lib.drawRandomCard(true); 
+                    this.currentStep = GameStep.CARD_PICKED;
+                    System.out.println("Drawn from the deck : " + cardInHand.getValue());
+                } else if (isGrave && !graveward.isEmpty()) {
+                    this.cardInHand = this.graveward.remove(this.graveward.size() - 1);
+                    this.currentStep = GameStep.CARD_PICKED;
+                    System.out.println("Draw from the discard pile : " + cardInHand.getValue());
+                }
+                break;
+
+            case CARD_PICKED:
+                if (isGrave) {
+                    // the player doesn’t want the drawn card 
+                    this.graveward.add(this.cardInHand); // go in the discard 
+                    this.cardInHand = null;
+                    this.currentStep = GameStep.WAITING_FOR_REVEAL;
+                    System.out.println("Card rejected ! Choose a card to reveal.");
+                } else if (row != -1 && col != -1) {
+                    // classic excahnge 
+                    Player p = this.getCurrentPlayer();
+                    Card oldCard = p.exchangeCard(this.cardInHand, row, col);
+                    this.graveward.add(oldCard);
+                    this.cardInHand = null;
+                    advanceTurn();
+                }
+                break;
+
+            case WAITING_FOR_REVEAL:
+                if (row != -1 && col != -1) {
+                    Player p = this.getCurrentPlayer();
+                    Card toReveal = p.getCard(row, col);
+                    if (!toReveal.isVisible()) {
+                        toReveal.reveal();
+                        advanceTurn();
+                    }
+                }
+                break;
+        }
+    }
+
+    /**
+     * Advances the game to the next turn.
+     */
+    protected void advanceTurn() {
+        Player p = this.getCurrentPlayer();
+        this.updatePlayerHand(p);
+
+        // check if it is the end of the game 
+        if (this.isRoundFinish()) {
+            this.updateScore();
+            if (this.isGameFinish()) {
+                this.currentStep = GameStep.GAME_OVER;
+                this.endGame();
+            } else {
+                this.setUpRound(); // new round 
+                this.currentStep = GameStep.START_TURN;
+            }
+        } else {
+            // next player
+            
+            this.id_player = (this.id_player + 1) % this.getNumberOfPlayer();
+            this.currentStep = GameStep.START_TURN;
+
+            // If it’s an AI, you automate your turn.
+            if (!this.getCurrentPlayer().isHumain()) {
+                Player bot = this.getCurrentPlayer();
+                playAiTurn(bot);
+            }
+        }
+    }
+
+    /**
+     * Plays the turn for an AI player. 
+     * 
+     * @param bot the AI player whose turn is being played
+     */
+    protected void playAiTurn(Player bot) {
+        System.out.println("AI thinking...");
+        // Must be improved with a real strategy, but for now it just draws from the deck and exchanges with the first card of its hand
+        Card c = this.lib.drawRandomCard(true);
+        this.graveward.add(bot.exchangeCard(c, 0, 0)); 
+        advanceTurn();
+    }
+
+    /**
+     * Getter for the current step of the turn, used by the UI to determine what actions are available to the player.
+     * 
+     * @return the current step of the turn
+     */ 
+    public GameStep getStep() { 
+        return this.currentStep; 
+    }
+
+    /**
+     * Getter for the card currently in the player's hand (the card that was just drawn and is waiting to be exchanged or rejected).
+     * 
+     * @return the card in the player's hand
+     */
+    public Card getCardInHand() {
+        return this.cardInHand; 
+    }
+
 }
