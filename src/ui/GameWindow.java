@@ -2,6 +2,7 @@ package ui;
 
 import game.Player;
 import game.gamerule.Skyjo;
+import game.gamerule.GameStep;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -106,13 +107,13 @@ public class GameWindow extends JFrame {
             Skyjo s = (Skyjo) game;
             String playerName = s.getCurrentPlayer().toString();
         
-            if (s.getStep() == Skyjo.GameStep.START_TURN) {
+            if (s.getStep() == GameStep.START_TURN) {
                 statusLabel.setText("Turn of " + playerName + " : Draw a card (Deck or Discard)");
-            } else if (s.getStep() == Skyjo.GameStep.CARD_PICKED) {
+            } else if (s.getStep() == GameStep.CARD_PICKED) {
                 statusLabel.setText(playerName + " : Click on one of your cards to exchange");
-            } else if (s.getStep() == Skyjo.GameStep.GAME_OVER) {
+            } else if (s.getStep() == GameStep.GAME_OVER) {
                 statusLabel.setText("GAME OVER");
-            } else if (s.getStep() == Skyjo.GameStep.WAITING_FOR_REVEAL) {
+            } else if (s.getStep() == GameStep.WAITING_FOR_REVEAL) {
                 statusLabel.setText(playerName + " : Card rejected ! Reveal one of your hidden cards.");
             }
         }      

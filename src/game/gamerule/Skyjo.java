@@ -22,22 +22,11 @@ public class Skyjo extends Board {
     /** ID of the player who first reveals all cards in the current round. */
     protected int id_finisher;
 
-    /*
-     * we add an enumeration to know where we are in the turn, 
-     * and a variable to store the card that the player has just drawn.
-     */
-    public enum GameStep {
-        START_TURN,       // Waiting for a draw (Deck or Grave)
-        CARD_PICKED,      // The player has a card "in hand," is waiting to choose a place on his board.
-        WAITING_FOR_REVEAL,    //Waits for the player to return a card 
-        GAME_OVER,
-    }
-
     /** State variable to track the current step of the turn */
-    private GameStep currentStep = GameStep.START_TURN;
+    protected GameStep currentStep = GameStep.START_TURN;
 
     /** Temporary variable to hold the card that the player has just drawn. */
-    private Card cardInHand = null;
+    protected Card cardInHand = null;
 
     /**
      * Default constructor for a Skyjo game.
@@ -129,10 +118,6 @@ public class Skyjo extends Board {
             }
         }
         return false;
-    }
-
-    protected void drawBoardUi() {
-        System.out.println("Updating the GUI...");
     }
 
     /**
@@ -405,7 +390,7 @@ public class Skyjo extends Board {
     /**
      * Advances the game to the next turn.
      */
-    private void advanceTurn() {
+    protected void advanceTurn() {
         Player p = this.getCurrentPlayer();
         this.updatePlayerHand(p);
 
@@ -435,7 +420,7 @@ public class Skyjo extends Board {
     /**
      * Plays the turn for an AI player. 
      */
-    private void playAiTurn() {
+    protected void playAiTurn() {
         System.out.println("AI thinking...");
         // Must be improved with a real strategy, but for now it just draws from the deck and exchanges with the first card of its hand
         Player p = getCurrentPlayer();

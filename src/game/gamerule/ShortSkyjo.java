@@ -48,8 +48,36 @@ public class ShortSkyjo extends Skyjo {
         this.endGame();
     }
 
-    /* PAREIL EST CE QUE TU PEUX REGARDER AUSSI ET VOIR SI C'EST UTILE 
-    */
+    @Override
+    /**
+     * Advances the game to the next turn.
+     */
+    protected void advanceTurn() {
+        Player p = this.getCurrentPlayer();
+        this.updatePlayerHand(p);
+
+        // check if it is the end of the game 
+        if (this.isRoundFinish()) {
+            this.updateScore();
+            this.endGame();
+        } else {
+            // next player
+            
+            this.id_player = (this.id_player + 1) % this.getNumberOfPlayer();
+            this.currentStep = GameStep.START_TURN;
+
+            // If it’s an AI, you automate your turn.
+            if (!this.getCurrentPlayer().isHumain()) {
+                this.playAiTurn();
+            }
+        }
+    }
+
+    /**
+     * Checks if the game is over by verifying if any player has all their cards visible.
+     * 
+     * @return true if the game is over (at least one player has all cards visible), false otherwise
+     */
     public boolean isGameOver() {
         for (Player p : playerList) {
             boolean allVisible = true;
