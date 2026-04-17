@@ -1,5 +1,7 @@
 package game.gamerule;
 
+import game.Player;
+
 /**
  * A short variant of InvertSkyjo that plays only a single round.
  * Uses inverted Skyjo scoring, but:
@@ -45,6 +47,31 @@ public class InvertShortSkyjo extends InvertSkyjo {
         this.round();
         this.updateScore();
         this.endGame();
+    }
+
+    @Override
+    /**
+     * Advances the game to the next turn.
+     */
+    protected void advanceTurn() {
+        Player p = this.getCurrentPlayer();
+        this.updatePlayerHand(p);
+
+        // check if it is the end of the game 
+        if (this.isRoundFinish()) {
+            this.updateScore();
+            this.endGame();
+        } else {
+            // next player
+            
+            this.id_player = (this.id_player + 1) % this.getNumberOfPlayer();
+            this.currentStep = GameStep.START_TURN;
+
+            // If it’s an AI, you automate your turn.
+            if (!this.getCurrentPlayer().isHumain()) {
+                this.playAiTurn();
+            }
+        }
     }
 }
 
