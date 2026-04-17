@@ -412,20 +412,22 @@ public class Skyjo extends Board {
 
             // If it’s an AI, you automate your turn.
             if (!this.getCurrentPlayer().isHumain()) {
-                playAiTurn();
+                Player bot = this.getCurrentPlayer();
+                playAiTurn(bot);
             }
         }
     }
 
     /**
      * Plays the turn for an AI player. 
+     * 
+     * @param bot the AI player whose turn is being played
      */
-    protected void playAiTurn() {
+    protected void playAiTurn(Player bot) {
         System.out.println("AI thinking...");
         // Must be improved with a real strategy, but for now it just draws from the deck and exchanges with the first card of its hand
-        Player p = getCurrentPlayer();
         Card c = this.lib.drawRandomCard(true);
-        this.graveward.add(p.exchangeCard(c, 0, 0)); 
+        this.graveward.add(bot.exchangeCard(c, 0, 0)); 
         advanceTurn();
     }
 

@@ -68,7 +68,8 @@ public class ShortSkyjo extends Skyjo {
 
             // If it’s an AI, you automate your turn.
             if (!this.getCurrentPlayer().isHumain()) {
-                this.playAiTurn();
+                Player bot = this.getCurrentPlayer();
+                this.playAiTurn(bot);
             }
         }
     }
