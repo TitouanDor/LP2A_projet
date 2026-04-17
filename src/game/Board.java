@@ -33,6 +33,9 @@ public class Board {
     /** True if a graphical UI is currently active, false otherwise. */
     protected boolean isUiActive;
 
+    /** Number number of the AI level  */
+    protected int aiLevel = 0;
+
     /**
      * Default board constructor.
      * Creates a game with 2 players, each with a 3×4 hand grid.
@@ -59,6 +62,24 @@ public class Board {
      */
     public void setUiActive(boolean active) {
         this.isUiActive = active;
+    }
+
+    /**
+     * sette for the AI level 
+     * 
+     * @param level
+     */
+    public void setAiLevel(int level) {
+        this.aiLevel = level;
+    }
+
+    /**
+     * getter for the AI level 
+     * 
+     * @return aiLevel
+     */
+    public int getAiLevel() {
+        return this.aiLevel;
     }
     
 

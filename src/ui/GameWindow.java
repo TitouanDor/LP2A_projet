@@ -65,6 +65,14 @@ public class GameWindow extends JFrame {
             }); 
         }
 
+        /**
+        * Overrides the default painting mechanism to render the game components.
+        * This method is automatically called by Swing whenever the panel needs to be redrawn.
+        * It delegates the actual drawing logic to the {@code Board} class to render 
+        * players, their card grids, the deck, and the discard pile.
+        *
+        * @param g the Graphics context used for drawing.
+        */
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -75,6 +83,14 @@ public class GameWindow extends JFrame {
             }
         }
 
+        /**
+        * Processes mouse click coordinates to identify game actions.
+        * It determines if the click occurred on the deck, the discard pile, or a specific 
+        * card in the current player's hand. Once the target is identified, it triggers 
+        * the game logic via {@code handleAction} and refreshes the display.
+        * * @param x The horizontal pixel coordinate of the click.
+        * @param y The vertical pixel coordinate of the click.
+        */
         private void handleMouseClick(int x, int y) {
             int w = getWidth();
             int h = getHeight();

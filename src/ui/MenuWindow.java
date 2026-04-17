@@ -11,8 +11,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import java.awt.*;
 
 /**
  * Represents the main menu window for the UTBM Skyjo game.
@@ -20,6 +24,8 @@ import javax.swing.JCheckBox;
 public class MenuWindow extends JFrame {
     private JButton btnClassic, btnShort, btnInvert, btnInvertShort, btnQuit, btnRules;
     private JCheckBox checkHuman1, checkHuman2;
+    private JComboBox<String> aiLevelSelector;
+    private JLabel aiLabel;
 
     /**
      * Constructor for the MenuWindow, which initializes the main menu window.
@@ -40,26 +46,48 @@ public class MenuWindow extends JFrame {
         title.setForeground(new Color(0, 85, 164));
         mainPanel.add(title, BorderLayout.NORTH);
 
-        // choose if you are a human or not 
-        JPanel centerPanel = new JPanel(new GridLayout(3, 1, 10, 10));
-        centerPanel.setOpaque(false);
+        //part with IA button 
+        JPanel configPanel = new JPanel();
+        configPanel.setLayout(new BoxLayout(configPanel, BoxLayout.Y_AXIS));
+        configPanel.setOpaque(false);
 
-        JPanel playersPanel = new JPanel();
+        JLabel configLabel = new JLabel("Configure your players");
+        configLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        configLabel.setForeground(new Color(0, 85, 164));
+
+        JPanel playersPanel = new JPanel(); 
         playersPanel.setOpaque(false);
+        playersPanel.setAlignmentX(Component.CENTER_ALIGNMENT); 
+
+        //part for check if you are a humain or not 
         checkHuman1 = new JCheckBox("Player 1 human ?", true);
         checkHuman2 = new JCheckBox("Player 2 human ?", true);
         playersPanel.add(checkHuman1);
-        playersPanel.add(checkHuman2);
+        playersPanel.add(checkHuman2); 
 
-        centerPanel.add(new JLabel ("Configure your player", SwingConstants.CENTER));
-        centerPanel.add(playersPanel);
+        aiLabel = new JLabel("AI level :");
+        aiLabel.setForeground(new Color(0, 85, 164)); 
+        aiLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        //button rules 
+        String[] levels = {"Level 0 (Easy)", "Level 1 (Normal)", "Level 2 (Expert)"};
+        aiLevelSelector = new JComboBox<>(levels);
+        aiLevelSelector.setMaximumSize(new Dimension(200, 30));
+        aiLevelSelector.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        configPanel.add(configLabel);      
+        configPanel.add(playersPanel);     
+        configPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        configPanel.add(aiLabel);
+        configPanel.add(aiLevelSelector);
+        configPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        // Button Rules
         btnRules = createStyledButton("Game Rules");
-        btnRules.setBackground(new Color(240,74,43));
-        centerPanel.add(btnRules);
+        btnRules.setBackground(new Color(240, 74, 43));
+        btnRules.setAlignmentX(Component.CENTER_ALIGNMENT);
+        configPanel.add(btnRules);
 
-        mainPanel.add(centerPanel, BorderLayout.CENTER);
+        mainPanel.add(configPanel, BorderLayout.CENTER);
 
         // mode buttons 
         JPanel southPanel = new JPanel(new BorderLayout(10,10));
@@ -128,5 +156,13 @@ public class MenuWindow extends JFrame {
      */
     public boolean[] getSelectedPlayers() {
         return new boolean[]{checkHuman1.isSelected(), checkHuman2.isSelected()};
+    }
+
+    /**
+     * Retrieves the difficulty level selected by the user in the AI combo box.
+     * * @return the index of the selected AI level (e.g., 0 for Easy, 1 for Normal, 2 for Expert).
+     */
+    public int getSelectedAILevel() {
+        return aiLevelSelector.getSelectedIndex();
     }
 }

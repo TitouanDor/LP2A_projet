@@ -424,11 +424,17 @@ public class Skyjo extends Board {
      * @param bot the AI player whose turn is being played
      */
     protected void playAiTurn(Player bot) {
-        System.out.println("AI thinking...");
-        // Must be improved with a real strategy, but for now it just draws from the deck and exchanges with the first card of its hand
-        Card c = this.lib.drawRandomCard(true);
-        this.graveward.add(bot.exchangeCard(c, 0, 0)); 
-        advanceTurn();
+        switch(this.aiLevel) {
+            case 0: 
+                // strategie bot 0
+                break;
+            case 1:
+                // strategie bot 1
+                break;
+            case 2:
+                // strategie bot 2
+                break;
+        }
     }
 
     /**

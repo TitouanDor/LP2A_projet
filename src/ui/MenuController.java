@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
 public class MenuController implements ActionListener {
     private MenuWindow view;
 
+
+
     /**
      * Constructor for the MenuController, which takes a reference to the MenuWindow view to interact with it.
      * 
@@ -31,6 +33,12 @@ public class MenuController implements ActionListener {
             return;
         }
 
+        //button for IA level 
+        boolean[] humans = this.view.getSelectedPlayers();
+        int aiLevel = this.view.getSelectedAILevel();
+        game.gamerule.Skyjo game = new game.gamerule.Skyjo(3, 4, humans);
+        game.setAiLevel(aiLevel);
+
         // button for game rules 
         if (command.equals("Game Rules")) {
             System.out.println("Display of rules");
@@ -40,7 +48,6 @@ public class MenuController implements ActionListener {
         }
 
         boolean[] players = view.getSelectedPlayers();
-        Skyjo game;
 
         // instanciate the good model with the clicked button 
         if (command.equals("Short Mode (1 round)")) {
