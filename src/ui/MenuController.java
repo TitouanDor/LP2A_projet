@@ -4,9 +4,18 @@ import game.gamerule.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Controller class for the MenuWindow. It handles user interactions with the menu, such as button clicks, and updates the view accordingly. It also initializes the appropriate game model based on the user's selection and starts the game.
+ * The MenuController listens for actions on the menu buttons and responds by either launching the game rules window, quitting the application, or starting a new game with the selected mode and player configurations.
+ */
 public class MenuController implements ActionListener {
     private MenuWindow view;
 
+    /**
+     * Constructor for the MenuController, which takes a reference to the MenuWindow view to interact with it.
+     * 
+     * @param view the MenuWindow instance to control
+     */
     public MenuController(MenuWindow view) {
         this.view = view;
     }

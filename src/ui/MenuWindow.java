@@ -5,10 +5,16 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+/**
+ * Represents the main menu window for the UTBM Skyjo game.
+ */
 public class MenuWindow extends JFrame {
     private JButton btnClassic, btnShort, btnInvert, btnInvertShort, btnQuit, btnRules;
     private JCheckBox checkHuman1, checkHuman2;
 
+    /**
+     * Constructor for the MenuWindow, which initializes the main menu window.
+     */
     public MenuWindow() {
         setTitle("UTBM Skyjo - Main Menu");
         setSize(600, 500);
@@ -76,7 +82,13 @@ public class MenuWindow extends JFrame {
         setVisible(true);
     }
 
-    // method for styling buttons 
+    /**
+     * Helper method to create a styled JButton with consistent appearance across the menu.
+     * 
+     * @param text the text to display on the button
+     * 
+     * @return the created styled button
+     */
     private JButton createStyledButton(String text) {
         JButton btn = new JButton(text);
         btn.setFont(new Font("Segoe UI", Font.BOLD, 14)); //UDPATE POLICE AFTER 
@@ -86,7 +98,11 @@ public class MenuWindow extends JFrame {
         return btn;
     }
 
-    // controller methods
+    /**
+     * Method to set the ActionListener for all buttons in the menu. This allows the controller to handle user interactions with the menu.
+     * 
+     * @param listener the ActionListener to set for the buttons
+     */
     public void setMenuListener(ActionListener listener) {
         btnClassic.addActionListener(listener);
         btnShort.addActionListener(listener);
@@ -96,7 +112,11 @@ public class MenuWindow extends JFrame {
         btnRules.addActionListener(listener);
     }
 
-    // Getters for human player or not 
+    /**
+     * Getter for the selected player types (human or AI) based on the state of the checkboxes in the menu.
+     * 
+     * @return an array of booleans indicating whether each player is human (true) or AI (false)
+     */
     public boolean[] getSelectedPlayers() {
         return new boolean[]{checkHuman1.isSelected(), checkHuman2.isSelected()};
     }

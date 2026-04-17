@@ -3,7 +3,6 @@ package game.gamerule;
 import game.Board;
 import game.Card;
 import game.Player;
-import game.gamerule.Skyjo.GameStep;
 
 /**
  * Implementation of the Skyjo variant built on top of the generic Board.
@@ -79,7 +78,7 @@ public class Skyjo extends Board {
         if (this.lib == null || this.lib.getCardNumber() == 0) {
             System.err.println("CRITICAL ERROR: The library is empty or not loaded");
             System.err.println("Check that the card.dat file is in the right place.");
-            return; // On arrête la méthode ici pour éviter le crash
+            return; // Stop here to prevent further errors when trying to draw cards
         }
         int nbCard = 0;
         for (Player player : this.playerList) {
@@ -350,14 +349,6 @@ public class Skyjo extends Board {
     }
 
     // -------VERSION UI---------//
-    
-    
-    /**
-    * version UI de la boucle de jeu. 
-    * JE TE LAISSE REGARDER SI CA TE VA
-    
-    
-    */
 
     /**
      * Manages the actions of the human player via the UI.
@@ -446,17 +437,27 @@ public class Skyjo extends Board {
      */
     private void playAiTurn() {
         System.out.println("AI thinking...");
-        // SIMULATION D'UN TOUR SIMPLE (SI TU PEUX RECUP TA PARTIE LOGIQUE IA )
+        // Must be improved with a real strategy, but for now it just draws from the deck and exchanges with the first card of its hand
         Player p = getCurrentPlayer();
         Card c = this.lib.drawRandomCard(true);
         this.graveward.add(p.exchangeCard(c, 0, 0)); 
         advanceTurn();
     }
 
-    //getter for UI part 
+    /**
+     * Getter for the current step of the turn, used by the UI to determine what actions are available to the player.
+     * 
+     * @return the current step of the turn
+     */ 
     public GameStep getStep() { 
         return this.currentStep; 
     }
+
+    /**
+     * Getter for the card currently in the player's hand (the card that was just drawn and is waiting to be exchanged or rejected).
+     * 
+     * @return the card in the player's hand
+     */
     public Card getCardInHand() {
         return this.cardInHand; 
     }

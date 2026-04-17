@@ -91,10 +91,16 @@ public class Board {
     /**
      * Access a specific player by index.
      * Required for GameWindow.
+     * 
+     * @param index the index of the player to retrieve (0-based)
+     * 
+     * @return the Player object at the specified index, or null if index is out of
      */
     public Player getPlayer(int index) {
         if (index >= 0 && index < this.playerList.size()) {
             return this.playerList.get(index);
+        } else if (index >= this.playerList.size() || index < 0) {
+            System.out.println("Error: Player index out of bounds.");
         }
         return null;
     }
@@ -102,6 +108,8 @@ public class Board {
     /**
      * Access the current player.
      * Required for GameWindow.
+     * 
+     * @return the Player object whose turn it currently is
      */
     public Player getCurrentPlayer() {
         return this.playerList.get(this.id_player);
@@ -110,8 +118,6 @@ public class Board {
     /**
      * Prints the current contents of the graveyard (discard pile) to standard output.
      * Prints the value of each card in the graveyard, separated by ";".
-     * 
-     * @return no return value
      */
     protected void printGraveward() {
         for (Card card : this.graveward) {
@@ -124,8 +130,6 @@ public class Board {
      * Draws the board in text/console mode without a special UI.
      * Clears the console, prints the library reference and the graveyard,
      * and shows the last card in the graveyard if the graveyard is not empty.
-     * 
-     * @return no return value
      */
     protected void drawBoardWithoutUi() {
         System.out.print("\033[H\033[2J"); // TO CLEAR THE CONSOLE
@@ -140,8 +144,13 @@ public class Board {
         }
     }
     
-    // LOGIQUE UI AVEC TRANSFERT DE PLAYERBOARDVIEW (A VERIFIER AVANT SUPPRESSION DE PLAYERBOARDVIEW)
-
+    /**
+     * Draws the entire game board in a graphical UI mode.
+     * 
+     * @param g the Graphics object used for drawing
+     * @param panelWidth the width of the drawing panel
+     * @param panelHeight the height of the drawing panel
+     */
     public void drawAllPlayersUI(Graphics g, int panelWidth, int panelHeight) {
         int nbPlayers = playerList.size();
         int spacing = 20;
@@ -155,31 +164,35 @@ public class Board {
         }
         drawCenterPilesUI(g, panelWidth / 2 , panelHeight - 150);
 
-        // 3. NOUVEAU : Dessin de la carte piochée
-    // On vérifie si l'instance actuelle est bien un Skyjo pour accéder à cardInHand
-    if (this instanceof game.gamerule.Skyjo) {
-        game.gamerule.Skyjo skyjoGame = (game.gamerule.Skyjo) this;
-        Card inHand = skyjoGame.getCardInHand();
+        // Draw the card in hand if the current game
+        //We look if the current instance is a Skyjo to access cardInHand
+        if (this instanceof game.gamerule.Skyjo) {
+            game.gamerule.Skyjo skyjoGame = (game.gamerule.Skyjo) this;
+            Card inHand = skyjoGame.getCardInHand();
 
-        if (inHand != null) {
-            int cardW = 80;
-            int cardH = 110;
-            // On la place au dessus des piles centrales (y - 150)
-            int handX = (panelWidth / 2) - (cardW / 2);
-            int handY = panelHeight - 320; 
+            if (inHand != null) {
+                int cardW = 80;
+                int cardH = 110;
+                // Place the card somewhere near the center bottom of the screen, above the deck and grave
+                int handX = (panelWidth / 2) - (cardW / 2);
+                int handY = panelHeight - 320; 
 
-            // Small visual effect: a shadow or an outline to highlight it
-            g.setColor(new Color(0, 0, 0, 50));
-            g.fillRoundRect(handX + 4, handY + 4, cardW, cardH, 15, 15);
+                // Small visual effect: a shadow or an outline to highlight it
+                g.setColor(new Color(0, 0, 0, 50));
+                g.fillRoundRect(handX + 4, handY + 4, cardW, cardH, 15, 15);
 
-            inHand.reveal(); 
-            inHand.drawCardUI(g, handX, handY, cardW, cardH);
+                inHand.reveal(); 
+                inHand.drawCardUI(g, handX, handY, cardW, cardH);
             }
         }
     }
 
     /**
      * Draw the pickaxe and the discard pile in the center of the screen
+     * 
+     * @param g the Graphics object used for drawing
+     * @param centerX the x-coordinate of the center of the screen
+     * @param y the y-coordinate where the piles should be drawn
      */
     private void drawCenterPilesUI(Graphics g, int centerX , int y) {
         // Drawing of the deck (face down card)
@@ -202,8 +215,14 @@ public class Board {
     }
 
     /**
-    * Browse all the players to see if any of them received a click on a map.
-    */
+     * Browse all the players to see if any of them received a click on a map.
+     * 
+     * @param mouseX the x-coordinate of the mouse click
+     * @param mouseY the y-coordinate of the mouse click
+     * @param panelWidth the width of the drawing panel (used to calculate player areas)
+     * 
+     * @return an Object array containing the player who was clicked and the coordinates of the card, or null if no card was clicked
+     */
     public Object[] getClickedCardData(int mouseX, int mouseY, int panelWidth) {
         int nbPlayers = playerList.size();
         int spacing = 30;
@@ -222,8 +241,15 @@ public class Board {
     }
 
     /**
-    * Check if the click is on the pickaxe (Deck)
-    */
+     * Check if the click is on the pickaxe (Deck)
+     * 
+     * @param x the x-coordinate of the mouse click
+     * @param y the y-coordinate of the mouse click
+     * @param panelWidth the width of the drawing panel (used to calculate deck position)
+     * @param panelHeight the height of the drawing panel (used to calculate deck position)
+     * 
+     * @return true if the click is on the deck, false otherwise
+     */
     public boolean isDeckClicked(int x, int y, int panelWidth, int panelHeight) {
         int deckX = (panelWidth / 2) - 100; 
         int deckY = panelHeight - 150;
@@ -231,8 +257,15 @@ public class Board {
     }
 
     /**
-    * Check if the click is on the discard (Grave)
-    */
+     * Check if the click is on the discard (Grave)
+     * 
+     * @param x the x-coordinate of the mouse click
+     * @param y the y-coordinate of the mouse click
+     * @param panelWidth the width of the drawing panel (used to calculate grave position)
+     * @param panelHeight the height of the drawing panel (used to calculate grave position)
+     * 
+     * @return true if the click is on the grave, false otherwise
+     */
     public boolean isGraveClicked(int x, int y, int panelWidth, int panelHeight) {
         int graveX = (panelWidth / 2) + 20; 
         int graveY = panelHeight - 150;

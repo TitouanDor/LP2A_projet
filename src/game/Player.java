@@ -239,7 +239,7 @@ public class Player {
     }
 
 
-    // LOGIQUE UI (VIENT DE PLAYERBOARDVIEW)
+    // UI Logic
 
     public void setCard(int r, int c, Card card) {
         if (r < this.raw && c < this.column) {

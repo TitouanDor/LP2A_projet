@@ -4,8 +4,14 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+/**
+ * Represents the window for displaying game rules.
+ */
 public class RulesWindow extends JFrame {
 
+    /**
+     * Constructor for the RulesWindow, which initializes the rules window.
+     */
     public RulesWindow() {
         setTitle("UTBM Skyjo - Games Rules");
         setSize(500, 400);

@@ -6,6 +6,9 @@ import game.gamerule.Skyjo;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Represents the window for displaying the game board and handling user interactions during gameplay.
+ */
 public class GameWindow extends JFrame {
     private Skyjo game;
     private GamePanel gamePanel;
