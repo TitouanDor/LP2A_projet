@@ -416,7 +416,7 @@ public class Skyjo extends Board {
             if (!this.getCurrentPlayer().isHumain()) {
                 Player bot = this.getCurrentPlayer();
                 if(bot instanceof Bot) {
-                    ((Bot) bot).turn();
+                    ((Bot) bot).turn(this.lib, this.graveward); // the bot plays his turn by himself
                 } else {
                     System.err.println("CRITICAL ERROR: The player is not an instance of Bot");
                 }
@@ -431,7 +431,6 @@ public class Skyjo extends Board {
      * @param bot the AI player whose turn is being played
      */
     protected void playAiTurn(Player bot) {
-<<<<<<< HEAD
         switch(this.aiLevel) {
             case 0: 
                 // strategie bot 0
@@ -443,21 +442,6 @@ public class Skyjo extends Board {
                 // strategie bot 2
                 break;
         }
-=======
-        System.out.println("AI thinking...");
-        // Must be improved with a real strategy, but for now it just draws from the deck and exchanges with the first card of its hand
-        Card c = this.lib.drawRandomCard(true);
-        int row = 0;
-        int col = 0;
-        Card card;
-        do{
-            row = (int) (Math.random() * bot.getRaws());
-            col = (int) (Math.random() * bot.getColumns());
-            card = bot.getCard(row, col);
-        }while(card.isVisible());
-        this.graveward.add(bot.exchangeCard(c, row, col)); 
-        advanceTurn();
->>>>>>> c23d994 (add Bot.java)
     }
 
     /**

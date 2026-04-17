@@ -103,7 +103,7 @@ public class Board {
                 this.playerList.add(new Player(listOfHuman[i], line, column));
                 this.playerList.get(i).setName("Player " + (i + 1));
             } else {
-                this.playerList.add(new Bot(line, column, 0));
+                this.playerList.add(new Bot(line, column, 1));
                 this.playerList.get(i).setName("Bot " + (i + 1));
             }
             

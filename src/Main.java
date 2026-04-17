@@ -2,6 +2,7 @@ import game.gamerule.*;
 import ui.MenuController;
 import ui.MenuWindow;
 
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 /**
@@ -14,6 +15,8 @@ import game.Bot;
 import game.Card;
 
 >>>>>>> c23d994 (add Bot.java)
+=======
+>>>>>>> 6d26a96 (add level 1 to Bot)
 public class Main {
     /**
      * Main method that launches the game.
