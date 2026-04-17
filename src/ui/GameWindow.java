@@ -2,9 +2,15 @@ package ui;
 
 import game.Player;
 import game.gamerule.Skyjo;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 /**
  * Represents the window for displaying the game board and handling user interactions during gameplay.

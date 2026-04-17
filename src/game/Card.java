@@ -1,6 +1,12 @@
 package game;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.FontMetrics;
+
 
 /**
  * Represents a single card used in the game.

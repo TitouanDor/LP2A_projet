@@ -2,7 +2,10 @@ package game;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+
 
 
 /**
