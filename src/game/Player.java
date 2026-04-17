@@ -258,14 +258,15 @@ public class Player {
      * @param y Starting position Y of the player's board
      * @param cardWidth Crad Width
      * @param cardHeight Card Height 
+     * @param score Player's current score to display on the board
      */
-    public void drawHandUI(Graphics g, int x, int y, int cardWidth, int cardHeight) {
+    public void drawHandUI(Graphics g, int x, int y, int cardWidth, int cardHeight, int score) {
         int padding = 10; // space between card 
         
         // title 
         g.setColor(Color.BLACK);
         g.setFont(new Font("Arial", Font.BOLD, 14));
-        g.drawString("Board of " + this.name + (human ? " (You)" : " (AI)") + " Hand Value : " + this.getHandValue(), x, y - 10);
+        g.drawString("Board of " + this.name + (human ? " (You)" : " (AI)") + " Hand Value : " + this.getHandValue() + " Score : " + score, x, y - 10);
 
         // draw gridboard 
         for (int r = 0; r < this.raw; r++) {

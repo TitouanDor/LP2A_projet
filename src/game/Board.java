@@ -21,6 +21,9 @@ public class Board {
     /** The number of players in the current game. */
     private int numberOfPlayer;
 
+    /** Score list indexed by player ID; scores accumulate over rounds. */
+    protected int[] scoreList;
+
     /** ID of the player whose turn it is. */
     protected int id_player = 0;
 
@@ -162,7 +165,7 @@ public class Board {
             Player p = playerList.get(i);
             int startX = spacing + i * (playerAreaWidth + spacing);
             // we draw the board
-            p.drawHandUI(g, startX, 50, 80, 110);  
+            p.drawHandUI(g, startX, 50, 80, 110, this.scoreList != null ? this.scoreList[i] : 0);  
         }
         drawCenterPilesUI(g, panelWidth / 2 , panelHeight - 150);
 

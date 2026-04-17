@@ -138,4 +138,18 @@ public class Library {
         }
         return list;
     }
+
+    /**
+     * Resets the library to its initial state by reloading all cards from the data file.
+     * This is useful at the start of each new round to ensure the library is full again
+     */
+    public void reset() {
+        this.list.clear();
+        try {
+            this.reader = new Scanner(new FileInputStream("./../card.dat"));
+            loadCard();
+        } catch (FileNotFoundException e) {
+            System.err.println("Couldn't find the file card.dat: " + e.getMessage());
+        }
+    }
 }

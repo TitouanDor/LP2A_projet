@@ -19,9 +19,6 @@ import game.Player;
  */
 public class Skyjo extends Board {
 
-    /** Score list indexed by player ID; scores accumulate over rounds. */
-    protected int[] scoreList;
-
     /** ID of the player who first reveals all cards in the current round. */
     protected int id_finisher;
 
@@ -81,6 +78,7 @@ public class Skyjo extends Board {
             return; // Stop here to prevent further errors when trying to draw cards
         }
         int nbCard = 0;
+        this.lib.reset(); // Reset the library to its initial state at the start of each round
         for (Player player : this.playerList) {
             player.resetRC();
             nbCard = player.getColumns() * player.getRaws();
@@ -214,7 +212,7 @@ public class Skyjo extends Board {
         }
 
         if (scoreMinWithoutWinner <= tempScore[id_finisher] && tempScore[id_finisher] > 0) {
-            System.out.println("Play better, your score is multiplied by 2");
+            System.out.println("Play better, your score is multiplied by 2" + " (finisher score : " + tempScore[id_finisher] + " vs min score without winner : " + scoreMinWithoutWinner + ")");
             tempScore[id_finisher] *= 2;
         }
 
@@ -408,6 +406,9 @@ public class Skyjo extends Board {
      * Advances the game to the next turn.
      */
     private void advanceTurn() {
+        Player p = this.getCurrentPlayer();
+        this.updatePlayerHand(p);
+
         // check if it is the end of the game 
         if (this.isRoundFinish()) {
             this.updateScore();
@@ -420,8 +421,7 @@ public class Skyjo extends Board {
             }
         } else {
             // next player
-            Player p = this.getCurrentPlayer();
-            this.updatePlayerHand(p);
+            
             this.id_player = (this.id_player + 1) % this.getNumberOfPlayer();
             this.currentStep = GameStep.START_TURN;
 
