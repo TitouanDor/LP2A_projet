@@ -125,7 +125,11 @@ public class Player {
      */
     public void revealCard(int raw, int column){
         Card card = this.hand.get(raw*this.getColumns()+column);
-        card.reveal();
+        if(card != null){
+            card.reveal();
+        } else {
+            System.err.println("CRITICAL ERROR: Null card found in player's hand during revealCard.");
+        }
     }
 
     /**
@@ -187,7 +191,10 @@ public class Player {
      */
     public boolean isHandRevealed() {
         for (Card card : hand) {
-            if (card != null && !card.isVisible()) {
+            if(card == null){
+                continue; // skip null cards, they are considered as revealed (empty slot)
+            }
+            if (!card.isVisible()) {
                 return false;
             }
         }
@@ -276,8 +283,26 @@ public class Player {
      * @return no return value
      */
     public void revealHand(){
+        if(this.isHandRevealed()){
+            return;
+        } 
+
+        if(this.hand == null){
+            System.err.println("CRITICAL ERROR: Null hand found for player during revealHand.");
+            return;
+        }
+
+        if(this.hand.size() == 0){
+            System.err.println("CRITICAL ERROR: Hand size 0.");
+            return;
+        }
+
         for (Card card : this.hand) {
-            card.reveal();
+            if(card != null){
+                card.reveal();
+            } else {
+                System.err.println("CRITICAL ERROR: Null card found in player's hand during revealHand.");
+            }
         }
     }
 

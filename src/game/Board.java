@@ -47,7 +47,11 @@ public class Board {
         }
     }
 
-    // À ajouter dans Board.java
+    /**
+     * setter for the UI active state, used to enable UI mode.
+     * 
+     * @param active
+     */
     public void setUiActive(boolean active) {
         this.isUiActive = active;
     }

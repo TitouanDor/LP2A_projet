@@ -1,7 +1,6 @@
 package game;
 
 import java.awt.*;
-import javax.swing.*;
 
 /**
  * Represents a single card used in the game.

@@ -1,6 +1,5 @@
 package ui;
 
-import game.Board;
 import game.Player;
 import game.gamerule.Skyjo;
 
