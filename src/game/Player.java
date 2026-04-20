@@ -190,6 +190,8 @@ public class Player {
     }
 
     /**
+     * Checks if all cards in the player's hand are revealed.
+     * 
      * @return (boolean) return true if all the player hand's card are revealed else false
      */
     public boolean isHandRevealed() {
@@ -241,9 +243,16 @@ public class Player {
         }
     }
 
-
-    // UI Logic
-
+    /**
+     * Updates a specific card in the player's grid based on its coordinates.
+     * It translates the 2D coordinates (row and column) into a 1D index to modify 
+     * the underlying list. This is typically used during exchanges or when 
+     * removing a completed column.
+     *
+     * @param r    The row index of the card to set.
+     * @param c    The column index of the card to set.
+     * @param card The new Card object to place at the specified position (can be null).
+     */
     public void setCard(int r, int c, Card card) {
         if (r < this.raw && c < this.column) {
             this.hand.set(r * this.column + c, card);
@@ -410,6 +419,12 @@ public class Player {
         this.column -= 1;
     }
 
+    /**
+     * Returns a string representation of the player.
+     * In this implementation, it simply returns the player's name, 
+     * which is useful for displaying logs or winner announcements.
+     * * @return The name of the player.
+     */
     public String toString(){
         return this.name;
     }

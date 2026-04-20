@@ -33,6 +33,9 @@ public class Board {
     /** True if a graphical UI is currently active, false otherwise. */
     protected boolean isUiActive;
 
+    /** Number number of the AI level  */
+    protected int aiLevel = 0;
+
     /**
      * Default board constructor.
      * Creates a game with 2 players, each with a 3×4 hand grid.
@@ -50,6 +53,7 @@ public class Board {
         for (Player p : playerList) {
             p.setName("Player " + (playerList.indexOf(p) + 1));
         }
+        this.aiLevel = 0;
     }
 
     /**
@@ -59,6 +63,24 @@ public class Board {
      */
     public void setUiActive(boolean active) {
         this.isUiActive = active;
+    }
+
+    /**
+     * sette for the AI level 
+     * 
+     * @param level
+     */
+    public void setAiLevel(int level) {
+        this.aiLevel = level;
+    }
+
+    /**
+     * getter for the AI level 
+     * 
+     * @return aiLevel
+     */
+    public int getAiLevel() {
+        return this.aiLevel;
     }
     
 
@@ -71,8 +93,9 @@ public class Board {
      * @param line          number of rows in each player's hand grid
      * @param column        number of columns in each player's hand grid
      * @param listOfHuman   boolean array indicating which players are human (true = human, false = AI)
+     * @param aiLevel         the level of the AI players
      */
-    public Board(int NbPlayer, int line, int column, boolean[] listOfHuman) {
+    public Board(int NbPlayer, int line, int column, boolean[] listOfHuman, int aiLevel) {
         this.numberOfPlayer = NbPlayer;
         this.playerList = new ArrayList<Player>(this.numberOfPlayer);
         for (int i = 0; i < this.numberOfPlayer; i++) {
@@ -81,7 +104,9 @@ public class Board {
         }
         this.graveward = new ArrayList<Card>();
         this.lib = new Library();
+        this.aiLevel = aiLevel;
         this.isUiActive = false;
+        System.out.println("Board initialized with " + this.numberOfPlayer + " players, hand size " + line + "x" + column + ", AI level " + aiLevel);
     }
 
     /**

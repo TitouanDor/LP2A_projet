@@ -27,9 +27,10 @@ public class InvertShortSkyjo extends InvertSkyjo {
      * @param line        number of rows in each player's hand grid
      * @param column      number of columns in each player's hand grid
      * @param listOfHuman boolean array indicating which players are human (true = human, false = AI)
+     * @param aiLevel         the level of the AI players
      */
-    public InvertShortSkyjo(int line, int column, boolean[] listOfHuman) {
-        super(line, column, listOfHuman);
+    public InvertShortSkyjo(int line, int column, boolean[] listOfHuman, int aiLevel) {
+        super(line, column, listOfHuman, aiLevel);
     }
 
     /**

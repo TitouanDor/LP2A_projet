@@ -70,7 +70,7 @@ public class Library {
                 System.err.println("Erreur de formatage sur la ligne : " + line);
             }
         }
-        this.reader.close();
+        this.reader.close(); 
     }
     /**
      * Displays all cards currently in the library.

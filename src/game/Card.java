@@ -88,14 +88,6 @@ public class Card {
         this.visible = true;
     }
 
-    /** A SUPPRIMER QUAND ON SUPPRIMERA CARRDDATA
-     * Getter to access the full data (useful for CardView)
-    
-    public CardData getData() {
-        return this.data;
-    }
-    */
-
     /**
      * Returns a string representation of the card,
      * including its name, value, and visibility state.

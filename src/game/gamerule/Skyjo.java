@@ -44,9 +44,10 @@ public class Skyjo extends Board {
      * @param line          number of rows in each player's hand grid
      * @param column        number of columns in each player's hand grid
      * @param listOfHuman   boolean array indicating which players are human (true = human, false = AI)
+     * @param aiLevel         the level of the AI players
      */
-    public Skyjo(int line, int column, boolean[] listOfHuman) {
-        super(listOfHuman.length, line, column, listOfHuman);
+    public Skyjo(int line, int column, boolean[] listOfHuman, int aiLevel) {
+        super(listOfHuman.length, line, column, listOfHuman, aiLevel);
         this.scoreList = new int[this.getNumberOfPlayer()];
     }
 
@@ -424,11 +425,17 @@ public class Skyjo extends Board {
      * @param bot the AI player whose turn is being played
      */
     protected void playAiTurn(Player bot) {
-        System.out.println("AI thinking...");
-        // Must be improved with a real strategy, but for now it just draws from the deck and exchanges with the first card of its hand
-        Card c = this.lib.drawRandomCard(true);
-        this.graveward.add(bot.exchangeCard(c, 0, 0)); 
-        advanceTurn();
+        switch(this.aiLevel) {
+            case 0: 
+                // strategie bot 0
+                break;
+            case 1:
+                // strategie bot 1
+                break;
+            case 2:
+                // strategie bot 2
+                break;
+        }
     }
 
     /**
