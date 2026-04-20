@@ -17,6 +17,7 @@ public class InvertSkyjo extends Skyjo {
      */
     public InvertSkyjo() {
         super();
+        this.MinimizeScore = false; // In InvertSkyjo, bots should try to maximize their score, not minimize it
     }
 
     /**
@@ -30,6 +31,7 @@ public class InvertSkyjo extends Skyjo {
      */
     public InvertSkyjo(int line, int column, boolean[] listOfHuman, int aiLevel) {
         super(line, column, listOfHuman, aiLevel);
+        this.MinimizeScore = false; // In InvertShortSkyjo, bots should try to maximize their score, not minimize it
     }
 
     /**
@@ -84,5 +86,25 @@ public class InvertSkyjo extends Skyjo {
             }
         }
         return false;
+    }
+
+    /**
+     * Ends the game by determining the overall winner
+     * (player with the lowest total score).
+     * Prints a victory message.
+     * 
+     * @return no return value
+     */
+    @Override
+    protected void endGame() {
+        int id_winner = 0;
+        for (int i = 0; i < this.getNumberOfPlayer(); i++) {
+            if (this.scoreList[id_winner] < this.scoreList[i]) {
+                id_winner = i;
+            }
+        }
+        Player p = this.playerList.get(id_winner);
+
+        System.out.println("THE WINNER IS : " + p + " WITH A SCORE OF : " + this.scoreList[id_winner]);
     }
 }

@@ -29,6 +29,8 @@ public class Skyjo extends Board {
     /** Temporary variable to hold the card that the player has just drawn. */
     protected Card cardInHand = null;
 
+    protected boolean MinimizeScore = true; // This variable is used to indicate to the bot that it should try to minimize the score (true for Skyjo, false for InvertSkyjo)
+
     /**
      * Default constructor for a Skyjo game.
      * Creates a 2‑player game with standard hand size (3×4) and initializes the score list.
@@ -412,31 +414,12 @@ public class Skyjo extends Board {
             if (!this.getCurrentPlayer().isHumain()) {
                 Player bot = this.getCurrentPlayer();
                 if(bot instanceof Bot) {
-                    ((Bot) bot).turn(this.lib, this.graveward); // the bot plays his turn by himself
+                    ((Bot) bot).turn(this.lib, this.graveward, this.MinimizeScore); // the bot plays his turn by himself
                 } else {
                     System.err.println("CRITICAL ERROR: The player is not an instance of Bot");
                 }
                 advanceTurn(); // after the bot turn, we advance to the next player (or next round if the bot ended the round)
             }
-        }
-    }
-
-    /**
-     * Plays the turn for an AI player. 
-     * 
-     * @param bot the AI player whose turn is being played
-     */
-    protected void playAiTurn(Player bot) {
-        switch(this.aiLevel) {
-            case 0: 
-                // strategie bot 0
-                break;
-            case 1:
-                // strategie bot 1
-                break;
-            case 2:
-                // strategie bot 2
-                break;
         }
     }
 

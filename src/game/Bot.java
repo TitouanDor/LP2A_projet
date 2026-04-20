@@ -34,56 +34,34 @@ public class Bot extends Player {
      * @param lib the library from which the bot can draw cards
      * @param graveward the list of cards in the graveyard that the bot can interact with
      */
-    public void turn(Library lib, ArrayList<Card> graveward) {
+    public void turn(Library lib, ArrayList<Card> graveward, boolean WantToMinimizeScore){
         Card card;
         System.out.println("Bot is taking its turn...");
         switch (this.level) {
             case 0:
                 // Easy level logic
                 graveward.add(lib.drawRandomCard(true));
-                card = chooseHiddenRandomCard();
+                card = chooseRandomCard(true);
                 card.reveal();
                 break;
             case 1:
                 // Medium level logic
-                int[] highestCard = getHighestCard();
-                int delta = 2; // This value can be adjusted to make the bot more or less aggressive in swapping cards
-                
-                if(highestCard[2] > 0){
-                    Card card2Drop = this.getCard(highestCard[0], highestCard[1]);
-                    if(graveward.size() > 0){
-                        Card card2Take = graveward.get(graveward.size() - 1);
-                        if(card2Take.getValue() - delta < card2Drop.getValue()){
-                            graveward.add(this.exchangeCard(card2Take, highestCard[0], highestCard[1]));
-                            System.out.println("Bot took a card from the graveyard and exchanged it with a card from its hand.");
-                        } else {
-                            card2Take = lib.drawRandomCard(true);
-                            if(card2Take.getValue() - delta < card2Drop.getValue()){
-                                graveward.add(this.exchangeCard(card2Take, highestCard[0], highestCard[1]));
-                                System.out.println("Bot drew a card from the library and exchanged it with a card from its hand.");
-                            } else {
-                                graveward.add(card2Take);
-                                card = this.chooseHiddenRandomCard();
-                                card.reveal();
-                                System.out.println("Bot drew a card from the library but did not exchange it. Instead, it revealed a hidden card from its hand.");
-                            }
-                        }
-                    } else {
-                        card = this.chooseHiddenRandomCard();
-                        card.reveal();
-                    }
+                if(WantToMinimizeScore){
+                    mediumIAMinimize(lib, graveward,2, true);
                 } else {
-                    graveward.add(lib.drawRandomCard(true));
-                    card = this.chooseHiddenRandomCard();
-                    card.reveal();
-                    System.out.println("Bot revealed a hidden card from its hand.");
+                    mediumIAMaximaze(lib, graveward,2, true);
                 }
                 break;
             case 2:
                 // Hard level logic
+                if(WantToMinimizeScore){
+                    mediumIAMinimize(lib, graveward,4, false);
+                } else {
+                    mediumIAMaximaze(lib, graveward,4, false);
+                }
                 break;
             default:
-                // Default logic
+                System.err.println("Invalid bot level: " + this.level);
                 break;
         }
     }
@@ -114,7 +92,40 @@ public class Bot extends Player {
         return new int[]{raw, column, max};
     }
 
-    private Card chooseHiddenRandomCard(){
+    /**
+     * Returns the lowest value card in the bot's hand that is visible. This method can be used as part of the bot's decision-making process to identify which card to swap.
+     * 
+     * @return an array containing the row, column, and value of the lowest card that is visible, or null if all cards are visible
+     */
+    private int [] getLowestCard(){
+        int min = Integer.MAX_VALUE;
+        int column = -1;
+        int raw = -1;
+        Card card;
+        for (int i = 0; i < this.raw; i++) {
+            for (int j = 0; j < this.column; j++) {
+                card = this.getCard(i, j);
+                if(card == null){
+                    continue;
+                }
+                if(card.isVisible() && card.getValue() < min){
+                    min = card.getValue();
+                    column = j;
+                    raw = i;
+                }
+            }
+        }
+        return new int[]{raw, column, min};
+    }
+
+    /**
+     * Chooses a random card from the bot's hand based on the visibility condition specified by the onlyReveal parameter.
+     * 
+     * @param onlyReveal a boolean indicating whether to choose only from hidden cards (true) or only from visible cards (false)
+     * 
+     * @return a randomly chosen card from the bot's hand that meets the visibility criteria
+     */
+    private Card chooseRandomCard(boolean onlyReveal){
         int column;
         int raw;
         Card card;
@@ -122,7 +133,7 @@ public class Bot extends Player {
             column = (int) (Math.random() * this.column);
             raw = (int) (Math.random() * this.raw);
             card = this.getCard(raw, column);
-        }while(card.isVisible());
+        }while(card.isVisible() == onlyReveal);
         return card;
     }
 
@@ -222,5 +233,97 @@ public class Bot extends Player {
             result += res.get(i)[1] + " ";
         }
         return result;
+    }
+
+    /**
+     * 
+     * This method implements the medium level AI logic for the bot's turn to reach minimum score. 
+     * It takes into account the bot's current hand, the library, and the graveyard to make decisions about which cards to swap or reveal.
+     * 
+     * @param lib the library from which the bot can draw cards
+     * @param graveward the list of cards in the graveyard that the bot can interact with
+     * @param delta this variable delta is used to make the bot more or less aggressive in swapping cards. 
+     * If the value of the card to take is less than the value of the card to drop minus delta, the bot will swap the cards. 
+     * Otherwise, it will keep the card to drop and reveal a hidden card from its hand. 
+     * Adjusting this value can make the bot more likely to swap cards (if delta is larger) or more likely to keep its current cards (if delta is smaller).
+     * @param onlyReveal a boolean indicating if the bot knows the value of hidden cards from his hand.
+     */
+    private void mediumIAMinimize(Library lib, ArrayList<Card> graveward,int delta, boolean onlyReveal){
+        Card card;
+        int[] highestCard = getHighestCard();
+        if(highestCard[2] > 0){
+            Card card2Drop = this.getCard(highestCard[0], highestCard[1]);
+            if(graveward.size() > 0){
+                Card card2Take = graveward.get(graveward.size() - 1);
+                if(card2Take.getValue() - delta < card2Drop.getValue()){
+                    graveward.add(this.exchangeCard(card2Take, highestCard[0], highestCard[1]));
+                    System.out.println("Bot took a card from the graveyard and exchanged it with a card from its hand.");
+                } else {
+                    card2Take = lib.drawRandomCard(true);
+                    if(card2Take.getValue() - delta < card2Drop.getValue()){
+                        graveward.add(this.exchangeCard(card2Take, highestCard[0], highestCard[1]));
+                        System.out.println("Bot drew a card from the library and exchanged it with a card from its hand.");
+                    } else {
+                        graveward.add(card2Take);
+                        card = this.chooseRandomCard(onlyReveal);
+                        card.reveal();
+                        System.out.println("Bot drew a card from the library but did not exchange it. Instead, it revealed a hidden card from its hand.");
+                    }
+                }
+            } else {
+                card = this.chooseRandomCard(onlyReveal);
+                card.reveal();
+            }
+        } else {
+            graveward.add(lib.drawRandomCard(true));
+            card = this.chooseRandomCard(onlyReveal);
+            card.reveal();
+            System.out.println("Bot revealed a hidden card from its hand.");
+        }
+    }
+
+    /**
+     * This method implements the medium level AI logic for the bot's turn, with a focus on maximizing the bot's score. 
+     * It takes into account the bot's current hand, the library, and the graveyard
+     * @param lib the library from which the bot can draw cards
+     * @param graveward the list of cards in the graveyard that the bot can interact with
+     * @param delta this variable delta is used to make the bot more or less aggressive in swapping cards. 
+     * If the value of the card to take is greater than the value of the card to drop plus delta, the bot will swap the cards. 
+     * Otherwise, it will keep the card to drop and reveal a hidden card from its hand. 
+     * Adjusting this value can make the bot more likely to swap cards (if delta is larger) or more likely to keep its current cards (if delta is smaller).
+     * @param onlyReveal a boolean indicating if the bot knows the value of hidden cards from his hand.
+     */
+    private void mediumIAMaximaze(Library lib, ArrayList<Card> graveward,int delta, boolean onlyReveal){
+        Card card;
+        int[] lowersCard = getLowestCard();
+        if(lowersCard[2] < 9){
+            Card card2Drop = this.getCard(lowersCard[0], lowersCard[1]);
+            if(graveward.size() > 0){
+                Card card2Take = graveward.get(graveward.size() - 1);
+                if(card2Take.getValue() - delta > card2Drop.getValue()){
+                    graveward.add(this.exchangeCard(card2Take, lowersCard[0], lowersCard[1]));
+                    System.out.println("Bot took a card from the graveyard and exchanged it with a card from its hand.");
+                } else {
+                    card2Take = lib.drawRandomCard(true);
+                    if(card2Take.getValue() - delta > card2Drop.getValue()){
+                        graveward.add(this.exchangeCard(card2Take, lowersCard[0], lowersCard[1]));
+                        System.out.println("Bot drew a card from the library and exchanged it with a card from its hand.");
+                    } else {
+                        graveward.add(card2Take);
+                        card = this.chooseRandomCard(onlyReveal);
+                        card.reveal();
+                        System.out.println("Bot drew a card from the library but did not exchange it. Instead, it revealed a hidden card from its hand.");
+                    }
+                }
+            } else {
+                card = this.chooseRandomCard(onlyReveal);
+                card.reveal();
+            }
+        } else {
+            graveward.add(lib.drawRandomCard(true));
+            card = this.chooseRandomCard(onlyReveal);
+            card.reveal();
+            System.out.println("Bot revealed a hidden card from its hand.");
+        }
     }
 }

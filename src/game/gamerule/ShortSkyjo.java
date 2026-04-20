@@ -1,6 +1,7 @@
 package game.gamerule;
 
 import game.Player;
+import game.Bot;
 
 /**
  * A variant of Skyjo that plays only one short round instead of continuing until a score limit.
@@ -51,27 +52,30 @@ public class ShortSkyjo extends Skyjo {
     }
 
     @Override
-    /**
-     * Advances the game to the next turn.
-     */
     protected void advanceTurn() {
-        Player p = this.getCurrentPlayer();
-        this.updatePlayerHand(p);
+        while (true) {
+            Player p = this.getCurrentPlayer();
+            this.updatePlayerHand(p);
 
-        // check if it is the end of the game 
-        if (this.isRoundFinish()) {
-            this.updateScore();
-            this.endGame();
-        } else {
-            // next player
-            
+            if (this.isRoundFinish()) {
+                this.updateScore();
+                this.currentStep = GameStep.GAME_OVER;
+                this.endGame();
+                return;
+            }
+
             this.id_player = (this.id_player + 1) % this.getNumberOfPlayer();
             this.currentStep = GameStep.START_TURN;
 
-            // If it’s an AI, you automate your turn.
-            if (!this.getCurrentPlayer().isHumain()) {
-                Player bot = this.getCurrentPlayer();
-                this.playAiTurn(bot);
+            Player current = this.getCurrentPlayer();
+
+            if (current.isHumain()) {
+                return; // on s'arrête, l'UI attend l'action du joueur humain
+            }
+
+            if (current instanceof Bot) {
+                Bot b = (Bot) current;
+                b.turn(this.lib, this.graveward, this.MinimizeScore); // the bot plays his turn by himself
             }
         }
     }

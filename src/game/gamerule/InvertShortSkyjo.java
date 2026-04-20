@@ -1,5 +1,6 @@
 package game.gamerule;
 
+import game.Bot;
 import game.Player;
 
 /**
@@ -18,6 +19,8 @@ public class InvertShortSkyjo extends InvertSkyjo {
      */
     public InvertShortSkyjo() {
         super();
+        this.MinimizeScore = false; // In InvertShortSkyjo, bots should try to maximize their score, not minimize it
+        System.out.println("Minimize Score: " + this.MinimizeScore);
     }
 
     /**
@@ -31,6 +34,7 @@ public class InvertShortSkyjo extends InvertSkyjo {
      */
     public InvertShortSkyjo(int line, int column, boolean[] listOfHuman, int aiLevel) {
         super(line, column, listOfHuman, aiLevel);
+        this.MinimizeScore = false; // In InvertShortSkyjo, bots should try to maximize their score, not minimize it
     }
 
     /**
@@ -51,27 +55,30 @@ public class InvertShortSkyjo extends InvertSkyjo {
     }
 
     @Override
-    /**
-     * Advances the game to the next turn.
-     */
     protected void advanceTurn() {
-        Player p = this.getCurrentPlayer();
-        this.updatePlayerHand(p);
+        while (true) {
+            Player p = this.getCurrentPlayer();
+            this.updatePlayerHand(p);
 
-        // check if it is the end of the game 
-        if (this.isRoundFinish()) {
-            this.updateScore();
-            this.endGame();
-        } else {
-            // next player
-            
+            if (this.isRoundFinish()) {
+                this.updateScore();
+                this.currentStep = GameStep.GAME_OVER;
+                this.endGame();
+                return;
+            }
+
             this.id_player = (this.id_player + 1) % this.getNumberOfPlayer();
             this.currentStep = GameStep.START_TURN;
 
-            // If it’s an AI, you automate your turn.
-            if (!this.getCurrentPlayer().isHumain()) {
-                Player bot = this.getCurrentPlayer();
-                this.playAiTurn(bot);
+            Player current = this.getCurrentPlayer();
+
+            if (current.isHumain()) {
+                return; // on s'arrête, l'UI attend l'action du joueur humain
+            }
+
+            if (current instanceof Bot) {
+                Bot b = (Bot) current;
+                b.turn(this.lib, this.graveward, this.MinimizeScore); // the bot plays his turn by himself
             }
         }
     }
