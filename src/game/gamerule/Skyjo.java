@@ -96,11 +96,9 @@ public class Skyjo extends Board {
      * @return true if the round has ended; in that case, {@link #id_finisher} is set to that player’s ID
      */
     protected boolean isRoundFinish() {
-        Player p;
-        for (int i = 0; i < this.getNumberOfPlayer(); i++) {
-            p = this.playerList.get(i);
+        for (Player p : this.playerList) {
             if (p.isHandRevealed()) {
-                this.id_finisher = i;
+                this.id_finisher = this.playerList.indexOf(p);
                 return true;
             }
         }
@@ -182,17 +180,15 @@ public class Skyjo extends Board {
     protected void updateScore() {
         Player p;
         int[] tempScore = new int[this.getNumberOfPlayer()];
-        int scoreMinWithoutWinner;
-        if (id_finisher == 0) {
-            scoreMinWithoutWinner = this.playerList.get(1).getHandValue();
-        } else {
-            scoreMinWithoutWinner = this.playerList.get(0).getHandValue();
-        }
+        int scoreMinWithoutWinner = Integer.MAX_VALUE;
 
         for (int i = 0; i < this.getNumberOfPlayer(); i++) {
             p = this.playerList.get(i);
             p.revealHand();
+            System.out.println("Player " + p + " has a hand value of : " + p.getHandValue());
+            p.drawConsolHand();
             tempScore[i] = p.getHandValue();
+            System.out.println("Player " + p + " has a temp score of : " + tempScore[i]);
             if (i != id_finisher && tempScore[i] < scoreMinWithoutWinner) {
                 scoreMinWithoutWinner = tempScore[i];
             }
