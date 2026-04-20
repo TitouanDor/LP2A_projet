@@ -16,31 +16,31 @@ import java.awt.Graphics;
 public class Player {
 
     /** True if the player is human, false if AI-controlled. */
-    private boolean human;
+    protected boolean human;
 
     /** List of cards currently in the player's hand. */
-    private ArrayList<Card> hand;
+    protected ArrayList<Card> hand;
 
     /** Max number for rows */
-    private int maxRaw;
+    protected int maxRaw;
 
     /**Max number of columns */
-    private int maxColumn;
+    protected int maxColumn;
 
     /** Number of rows in the player's hand grid. */
-    private int raw;
+    protected int raw;
 
     /** Number of columns in the player's hand grid. */
-    private int column;
+    protected int column;
 
     /** Random generator used for AI actions. */
-    private Random rdm;
+    protected Random rdm;
 
     /** Scanner used to read human player input. */
-    private Scanner scanner;
+    protected Scanner scanner;
 
     /** Name of the player. Defaults to "Default_name". */
-    private String name;
+    protected String name;
 
     /**
      * Default constructor.

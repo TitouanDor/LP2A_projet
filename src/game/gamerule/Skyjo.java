@@ -3,6 +3,7 @@ package game.gamerule;
 import game.Board;
 import game.Card;
 import game.Player;
+import game.Bot;
 
 /**
  * Implementation of the Skyjo variant built on top of the generic Board.
@@ -27,6 +28,8 @@ public class Skyjo extends Board {
 
     /** Temporary variable to hold the card that the player has just drawn. */
     protected Card cardInHand = null;
+
+    protected boolean MinimizeScore = true; // This variable is used to indicate to the bot that it should try to minimize the score (true for Skyjo, false for InvertSkyjo)
 
     /**
      * Default constructor for a Skyjo game.
@@ -95,11 +98,9 @@ public class Skyjo extends Board {
      * @return true if the round has ended; in that case, {@link #id_finisher} is set to that player’s ID
      */
     protected boolean isRoundFinish() {
-        Player p;
-        for (int i = 0; i < this.getNumberOfPlayer(); i++) {
-            p = this.playerList.get(i);
+        for (Player p : this.playerList) {
             if (p.isHandRevealed()) {
-                this.id_finisher = i;
+                this.id_finisher = this.playerList.indexOf(p);
                 return true;
             }
         }
@@ -181,17 +182,15 @@ public class Skyjo extends Board {
     protected void updateScore() {
         Player p;
         int[] tempScore = new int[this.getNumberOfPlayer()];
-        int scoreMinWithoutWinner;
-        if (id_finisher == 0) {
-            scoreMinWithoutWinner = this.playerList.get(1).getHandValue();
-        } else {
-            scoreMinWithoutWinner = this.playerList.get(0).getHandValue();
-        }
+        int scoreMinWithoutWinner = Integer.MAX_VALUE;
 
         for (int i = 0; i < this.getNumberOfPlayer(); i++) {
             p = this.playerList.get(i);
             p.revealHand();
+            System.out.println("Player " + p + " has a hand value of : " + p.getHandValue());
+            p.drawConsolHand();
             tempScore[i] = p.getHandValue();
+            System.out.println("Player " + p + " has a temp score of : " + tempScore[i]);
             if (i != id_finisher && tempScore[i] < scoreMinWithoutWinner) {
                 scoreMinWithoutWinner = tempScore[i];
             }
@@ -414,27 +413,13 @@ public class Skyjo extends Board {
             // If it’s an AI, you automate your turn.
             if (!this.getCurrentPlayer().isHumain()) {
                 Player bot = this.getCurrentPlayer();
-                playAiTurn(bot);
+                if(bot instanceof Bot) {
+                    ((Bot) bot).turn(this.lib, this.graveward, this.MinimizeScore); // the bot plays his turn by himself
+                } else {
+                    System.err.println("CRITICAL ERROR: The player is not an instance of Bot");
+                }
+                advanceTurn(); // after the bot turn, we advance to the next player (or next round if the bot ended the round)
             }
-        }
-    }
-
-    /**
-     * Plays the turn for an AI player. 
-     * 
-     * @param bot the AI player whose turn is being played
-     */
-    protected void playAiTurn(Player bot) {
-        switch(this.aiLevel) {
-            case 0: 
-                // strategie bot 0
-                break;
-            case 1:
-                // strategie bot 1
-                break;
-            case 2:
-                // strategie bot 2
-                break;
         }
     }
 

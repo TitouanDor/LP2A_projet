@@ -99,8 +99,14 @@ public class Board {
         this.numberOfPlayer = NbPlayer;
         this.playerList = new ArrayList<Player>(this.numberOfPlayer);
         for (int i = 0; i < this.numberOfPlayer; i++) {
-            this.playerList.add(new Player(listOfHuman[i], line, column));
-            this.playerList.get(i).setName("Player " + (i + 1));
+            if(listOfHuman[i]){
+                this.playerList.add(new Player(listOfHuman[i], line, column));
+                this.playerList.get(i).setName("Player " + (i + 1));
+            } else {
+                this.playerList.add(new Bot(line, column, 1));
+                this.playerList.get(i).setName("Bot " + (i + 1));
+            }
+            
         }
         this.graveward = new ArrayList<Card>();
         this.lib = new Library();

@@ -68,7 +68,7 @@ public class MenuWindow extends JFrame {
 
         //part for check if you are a humain or not 
         checkHuman1 = new JCheckBox("Player 1 human ?", true);
-        checkHuman2 = new JCheckBox("Player 2 human ?", true);
+        checkHuman2 = new JCheckBox("Player 2 human ?", false);
         playersPanel.add(checkHuman1);
         playersPanel.add(checkHuman2); 
 
@@ -78,6 +78,7 @@ public class MenuWindow extends JFrame {
 
         String[] levels = {"Level 0 (Easy)", "Level 1 (Normal)", "Level 2 (Expert)"};
         aiLevelSelector = new JComboBox<>(levels);
+        aiLevelSelector.setSelectedIndex(1);
         aiLevelSelector.setMaximumSize(new Dimension(200, 30));
         aiLevelSelector.setAlignmentX(Component.CENTER_ALIGNMENT);
 

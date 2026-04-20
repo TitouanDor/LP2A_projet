@@ -30,6 +30,5 @@ public class Main {
             menu.setMenuListener(controller);
             System.out.println("launch with the GUI interface ");
         }
-        
     }
 }
