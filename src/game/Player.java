@@ -190,6 +190,8 @@ public class Player {
     }
 
     /**
+     * Checks if all cards in the player's hand are revealed.
+     * 
      * @return (boolean) return true if all the player hand's card are revealed else false
      */
     public boolean isHandRevealed() {

@@ -22,9 +22,16 @@ import java.awt.*;
  * Represents the main menu window for the UTBM Skyjo game.
  */
 public class MenuWindow extends JFrame {
+    /** Buttons for different game modes */
     private JButton btnClassic, btnShort, btnInvert, btnInvertShort, btnQuit, btnRules;
+
+    /** Checkboxes for selecting human players */
     private JCheckBox checkHuman1, checkHuman2;
+    
+    /** Combo box for selecting AI level */
     private JComboBox<String> aiLevelSelector;
+
+    /** Label for AI level selection */
     private JLabel aiLabel;
 
     /**
@@ -160,6 +167,7 @@ public class MenuWindow extends JFrame {
 
     /**
      * Retrieves the difficulty level selected by the user in the AI combo box.
+     * 
      * * @return the index of the selected AI level (e.g., 0 for Easy, 1 for Normal, 2 for Expert).
      */
     public int getSelectedAILevel() {

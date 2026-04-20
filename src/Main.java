@@ -21,7 +21,7 @@ public class Main {
             if(args[0].equals("consol"))
             System.out.println("Starting game without GUI...");
             boolean [] listOfPlayer = {false,true};
-            Skyjo game = new Skyjo(3,4,listOfPlayer);
+            Skyjo game = new Skyjo(3,4,listOfPlayer, 1);
             game.game();
         } else {
             //part with UI

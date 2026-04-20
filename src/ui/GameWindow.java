@@ -21,6 +21,11 @@ public class GameWindow extends JFrame {
     private GamePanel gamePanel;
     private JLabel statusLabel;
 
+    /**
+     * Constructor for the GameWindow, which initializes the game window with the provided game instance.
+     * 
+     * @param game the game instance to display and interact with. It is expected to be an instance of Skyjo or a subclass.
+     */
     public GameWindow(Skyjo game) {
         this.game = game;
         

@@ -1,6 +1,9 @@
 package ui;
 
-import game.gamerule.*;
+import game.gamerule.InvertShortSkyjo;
+import game.gamerule.InvertSkyjo;
+import game.gamerule.ShortSkyjo;
+import game.gamerule.Skyjo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -9,9 +12,9 @@ import java.awt.event.ActionListener;
  * The MenuController listens for actions on the menu buttons and responds by either launching the game rules window, quitting the application, or starting a new game with the selected mode and player configurations.
  */
 public class MenuController implements ActionListener {
+
+    /** The view associated with this controller. */
     private MenuWindow view;
-
-
 
     /**
      * Constructor for the MenuController, which takes a reference to the MenuWindow view to interact with it.
@@ -33,11 +36,9 @@ public class MenuController implements ActionListener {
             return;
         }
 
-        //button for IA level 
-        boolean[] humans = this.view.getSelectedPlayers();
+        //button for IA level
         int aiLevel = this.view.getSelectedAILevel();
-        game.gamerule.Skyjo game = new game.gamerule.Skyjo(3, 4, humans);
-        game.setAiLevel(aiLevel);
+        Skyjo game; // declare the game variable to be used later for instantiating the correct game mode
 
         // button for game rules 
         if (command.equals("Game Rules")) {
@@ -52,16 +53,16 @@ public class MenuController implements ActionListener {
         // instanciate the good model with the clicked button 
         if (command.equals("Short Mode (1 round)")) {
             System.out.println("Short Mode selected");
-            game = new ShortSkyjo(3, 4, players);
+            game = new ShortSkyjo(3, 4, players, aiLevel);
         } else if (command.equals("Invert Mode")) {
             System.out.println("Invert Mode selected");
-            game = new InvertSkyjo(3, 4, players);
+            game = new InvertSkyjo(3, 4, players, aiLevel);
         } else if (command.equals("Invert Short Mode (1 round)")) {
             System.out.println("Invert Short Mode selected");
-            game = new InvertShortSkyjo(3, 4, players);
+            game = new InvertShortSkyjo(3, 4, players, aiLevel);
         } else {
             System.out.println("Classic Mode selected");
-            game = new Skyjo(3, 4, players);
+            game = new Skyjo(3, 4, players, aiLevel);
         }
 
         game.setUiActive(true);
