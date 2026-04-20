@@ -2,21 +2,12 @@ import game.gamerule.*;
 import ui.MenuController;
 import ui.MenuWindow;
 
-<<<<<<< HEAD
 
-<<<<<<< HEAD
 /**
  * The entry point of the UTBM Skyjo application.
  * This class handles the initial startup logic, allowing the game to run 
  * either in command-line console mode or with a Graphical User Interface (GUI).
  */
-=======
-import game.Bot;
-import game.Card;
-
->>>>>>> c23d994 (add Bot.java)
-=======
->>>>>>> 6d26a96 (add level 1 to Bot)
 public class Main {
     /**
      * Main method that launches the game.
