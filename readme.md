@@ -13,3 +13,6 @@ We've made multiple gamerules, all are based from the official rules but some of
 - ShortSkyjo : just 1 round
 - InvertSkyjo : you need to have the biggest score not the lowest 
 - InvertShortSkyjo : you need to have the biggest score not the lowest in just 1 turn
+
+## UI
+If you lunch the code without argument you will start with the UI, if you lunch with 1 or more arguents you will lunch in console mode
